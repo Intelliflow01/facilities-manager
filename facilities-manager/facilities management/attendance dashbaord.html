@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .dashboard-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .dashboard-card {
+      background: #f1f1f1;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .dashboard-card h5 {
+      color: #6a11cb;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Attendance Dashboard</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Attendance Dashboard</h1>
+    <p class="lead">Track daily, weekly, and monthly attendance trends.</p>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div class="container-fluid h-100">
+    <div class="row">
+      <!-- Live Attendance Status -->
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <h5>Present</h5>
+          <p class="display-4">85</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <h5>Late</h5>
+          <p class="display-4">10</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <h5>Absent</h5>
+          <p class="display-4">5</p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="dashboard-card">
+          <h5>Leave</h5>
+          <p class="display-4">15</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <label for="clientFilter" class="form-label">Filter by Client</label>
+        <select class="form-control" id="clientFilter">
+          <option value="All">All Clients</option>
+          <option value="Client A">Client A</option>
+          <option value="Client B">Client B</option>
+          <option value="Client C">Client C</option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="employeeFilter" class="form-label">Filter by Employee</label>
+        <select class="form-control" id="employeeFilter">
+          <option value="All">All Employees</option>
+          <option value="John Doe">John Doe</option>
+          <option value="Jane Smith">Jane Smith</option>
+          <option value="Alice Johnson">Alice Johnson</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Attendance Trends -->
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <div class="dashboard-section">
+          <h3>Monthly Attendance Trends</h3>
+          <canvas id="attendanceChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const attendanceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Present',
+          data: [80, 85, 90, 88],
+          borderColor: '#6a11cb',
+          fill: false
+        }, {
+          label: 'Late',
+          data: [10, 8, 5, 7],
+          borderColor: '#ffc107',
+          fill: false
+        }, {
+          label: 'Absent',
+          data: [5, 7, 5, 5],
+          borderColor: '#dc3545',
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
