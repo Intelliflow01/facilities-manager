@@ -1,0 +1,61 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+.navbar {
+    background: #343a40;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.navbar-brand, .nav-link {
+    color: white !important;
+}
+  
+  .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-header {
+    border-radius: 10px 10px 0 0;
+  }
+  
+  canvas {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  ul li {
+    margin-bottom: 10px;
+  }
+  
+  /* Dark Mode Styles */
+  .dark-mode .card {
+    background-color: #1e1e1e;
+    color: #ffffff;
+  }
+  
+  .dark-mode .card-header {
+    background-color: #333;
+  }
+  
+  .dark-mode .navbar {
+    background-color: #1e1e1e !important;
+  }

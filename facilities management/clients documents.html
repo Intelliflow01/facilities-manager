@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Documents</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .documents-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .btn-generate-document {
+      background: #6a11cb;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .btn-generate-document:hover {
+      background: #5a0bb5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Client Documents</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Client Documents</h1>
+    <p class="lead">Create and manage personalized client documents.</p>
+  </div>
+
+  <!-- Documents Section -->
+  <div class="container-fluid h-100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="documents-section">
+          <h3>Generate Documents</h3>
+          <div class="row">
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#quotationModal">
+                <i class="fas fa-file-alt"></i> Create Quotation
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#reminderModal">
+                <i class="fas fa-bell"></i> Create Reminder
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#contractModal">
+                <i class="fas fa-file-contract"></i> Create Contract
+              </button>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                <i class="fas fa-file-invoice"></i> Generate Invoice
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#receiptModal">
+                <i class="fas fa-receipt"></i> Generate Payment Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quotation Modal -->
+  <div class="modal fade" id="quotationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Quotation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="quotationForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="quotationClient" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="quotationClient" required>
+              </div>
+              <div class="col-md-6">
+                <label for="quotationDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="quotationDate" required>
+              </div>
+              <div class="col-md-12">
+                <label for="quotationDetails" class="form-label">Quotation Details</label>
+                <textarea class="form-control" id="quotationDetails" rows="5" required></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="quotationForm" class="btn btn-primary">Generate Quotation</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reminder Modal -->
+  <div class="modal fade" id="reminderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Reminder</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reminderForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="reminderClient" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="reminderClient" required>
+              </div>
+              <div class="col-md-6">
+                <label for="reminderType" class="form-label">Reminder Type</label>
+                <select class="form-control" id="reminderType" required>
+                  <option value="Reminder 1">Reminder 1</option>
+                  <option value="Reminder 2">Reminder 2</option>
+                  <option value="Reminder 3">Reminder 3</option>
+                </select>
+              </div>
+              <div class="col-md-12">
+                <label for="reminderMessage" class="form-label">Message</label>
+                <textarea class="form-control" id="reminderMessage" rows="5" required></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="reminderForm" class="btn btn-primary">Generate Reminder</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract Modal -->
+  <div class="modal fade" id="contractModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Contract</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="contractForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="contractClient" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="contractClient" required>
+              </div>
+              <div class="col-md-6">
+                <label for="contractDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="contractDate" required>
+              </div>
+              <div class="col-md-12">
+                <label for="contractDetails" class="form-label">Contract Details</label>
+                <textarea class="form-control" id="contractDetails" rows="5" required></textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="contractForm" class="btn btn-primary">Generate Contract</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invoice Modal -->
+  <div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Generate Invoice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="invoiceForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="invoiceClient" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="invoiceClient" required>
+              </div>
+              <div class="col-md-6">
+                <label for="invoiceDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="invoiceDate" required>
+              </div>
+              <div class="col-md-6">
+                <label for="invoiceAmount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="invoiceAmount" required>
+              </div>
+              <div class="col-md-6">
+                <label for="invoiceDescription" class="form-label">Description</label>
+                <input type="text" class="form-control" id="invoiceDescription" required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="invoiceForm" class="btn btn-primary">Generate Invoice</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div class="modal fade" id="receiptModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Generate Payment Receipt</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="receiptForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="receiptClient" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="receiptClient" required>
+              </div>
+              <div class="col-md-6">
+                <label for="receiptDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="receiptDate" required>
+              </div>
+              <div class="col-md-6">
+                <label for="receiptAmount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="receiptAmount" required>
+              </div>
+              <div class="col-md-6">
+                <label for="receiptDescription" class="form-label">Description</label>
+                <input type="text" class="form-control" id="receiptDescription" required>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="receiptForm" class="btn btn-primary">Generate Receipt</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Placeholder for document generation logic
+    document.getElementById('quotationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Quotation generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('quotationModal')).hide();
+    });
+
+    document.getElementById('reminderForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Reminder generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('reminderModal')).hide();
+    });
+
+    document.getElementById('contractForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Contract generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('contractModal')).hide();
+    });
+
+    document.getElementById('invoiceForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Invoice generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('invoiceModal')).hide();
+    });
+
+    document.getElementById('receiptForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Payment receipt generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('receiptModal')).hide();
+    });
+  </script>
+</body>
+</html>

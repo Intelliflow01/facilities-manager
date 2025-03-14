@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Marking System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .marking-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Attendance Marking</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Attendance Marking System</h1>
+    <p class="lead">Mark attendance using QR, GPS, or supervisor input.</p>
+  </div>
+
+  <!-- Marking Section -->
+  <div class="container-fluid h-100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="marking-section">
+          <h3>Mark Attendance</h3>
+          <div class="row">
+            <div class="col-md-4">
+              <button class="btn btn-primary w-100">
+                <i class="fas fa-qrcode"></i> Scan QR Code
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary w-100">
+                <i class="fas fa-map-marker-alt"></i> Use GPS
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-primary w-100">
+                <i class="fas fa-user-check"></i> Supervisor Input
+              </button>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="col-md-12">
+              <button class="btn btn-secondary w-100">
+                <i class="fas fa-upload"></i> Bulk Upload Attendance
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

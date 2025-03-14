@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client List & Profile Management</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .client-profile-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .client-profile-section img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+    .client-profile-section h3 {
+      color: #6a11cb;
+    }
+    .client-table {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      height: calc(100vh - 300px);
+      overflow-y: auto;
+    }
+    .client-table th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .client-table tbody tr:hover {
+      background-color: #f1f1f1;
+      cursor: pointer;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .btn-add-client {
+      background: #6a11cb;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .btn-add-client:hover {
+      background: #5a0bb5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Client Management</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Client List & Profile Management</h1>
+    <p class="lead">Manage client profiles, contracts, and assigned employees.</p>
+  </div>
+
+  <!-- Client Profile Section -->
+  <div class="container-fluid h-100">
+    <div class="row h-100">
+      <!-- First Section: Dynamic Client Profile View -->
+      <div class="col-md-4 h-100">
+        <div class="client-profile-section" id="clientProfileSection">
+          <p class="text-muted">Select a client to view their profile.</p>
+        </div>
+      </div>
+
+      <!-- Second Section: Client Table -->
+      <div class="col-md-8 h-100">
+        <div class="client-table">
+          <h3>Client List</h3>
+          <button class="btn btn-add-client" data-bs-toggle="modal" data-bs-target="#addClientModal">
+            <i class="fas fa-plus"></i> Add Client
+          </button>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Client Name</th>
+                <th>Status</th>
+                <th>Contract Start Date</th>
+                <th>Contract Expiry Date</th>
+                <th>Employees Assigned</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="clientTableBody">
+              <!-- Client data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Client Modal -->
+  <div class="modal fade" id="addClientModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Client</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addClientForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="clientName" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="clientName" required>
+              </div>
+              <div class="col-md-6">
+                <label for="clientStatus" class="form-label">Status</label>
+                <select class="form-control" id="clientStatus" required>
+                  <option value="Active">Active</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="contractStartDate" class="form-label">Contract Start Date</label>
+                <input type="date" class="form-control" id="contractStartDate" required>
+              </div>
+              <div class="col-md-6">
+                <label for="contractExpiryDate" class="form-label">Contract Expiry Date</label>
+                <input type="date" class="form-control" id="contractExpiryDate" required>
+              </div>
+              <div class="col-md-12">
+                <label for="employeesAssigned" class="form-label">Employees Assigned</label>
+                <select class="form-control" id="employeesAssigned" multiple>
+                  <option value="John Doe">John Doe</option>
+                  <option value="Jane Smith">Jane Smith</option>
+                  <option value="Alice Johnson">Alice Johnson</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="addClientForm" class="btn btn-primary">Add Client</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const clients = [
+      {
+        id: 1,
+        name: "Client A",
+        status: "Active",
+        contractStartDate: "2023-01-01",
+        contractExpiryDate: "2023-12-31",
+        employeesAssigned: ["John Doe", "Jane Smith"]
+      },
+      {
+        id: 2,
+        name: "Client B",
+        status: "Pending",
+        contractStartDate: "2023-02-01",
+        contractExpiryDate: "2023-11-30",
+        employeesAssigned: ["Alice Johnson"]
+      },
+      {
+        id: 3,
+        name: "Client C",
+        status: "Inactive",
+        contractStartDate: "2023-03-01",
+        contractExpiryDate: "2023-10-31",
+        employeesAssigned: []
+      }
+    ];
+
+    const clientTableBody = document.getElementById('clientTableBody');
+    const clientProfileSection = document.getElementById('clientProfileSection');
+
+    function renderClientTable() {
+      clientTableBody.innerHTML = clients.map(client => `
+        <tr>
+          <td>${client.id}</td>
+          <td>${client.name}</td>
+          <td>${client.status}</td>
+          <td>${client.contractStartDate}</td>
+          <td>${client.contractExpiryDate}</td>
+          <td>${client.employeesAssigned.join(", ")}</td>
+          <td>
+            <button class="btn btn-primary btn-sm view-client-btn" data-id="${client.id}">
+              <i class="fas fa-eye"></i> View Profile
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderClientProfile(client) {
+      clientProfileSection.innerHTML = `
+        <div class="text-center">
+          <img src="https://via.placeholder.com/150" alt="Client Logo">
+          <h3>${client.name}</h3>
+          <p class="text-muted">${client.status}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>Contract Start Date:</strong> ${client.contractStartDate}</li>
+          <li class="list-group-item"><strong>Contract Expiry Date:</strong> ${client.contractExpiryDate}</li>
+          <li class="list-group-item"><strong>Employees Assigned:</strong> ${client.employeesAssigned.join(", ")}</li>
+        </ul>
+      `;
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('view-client-btn')) {
+        const clientId = e.target.getAttribute('data-id');
+        const client = clients.find(c => c.id === parseInt(clientId));
+        if (client) {
+          renderClientProfile(client);
+        }
+      }
+    });
+
+    document.getElementById('addClientForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newClient = {
+        id: clients.length + 1,
+        name: document.getElementById('clientName').value,
+        status: document.getElementById('clientStatus').value,
+        contractStartDate: document.getElementById('contractStartDate').value,
+        contractExpiryDate: document.getElementById('contractExpiryDate').value,
+        employeesAssigned: Array.from(document.getElementById('employeesAssigned').selectedOptions).map(opt => opt.value)
+      };
+      clients.push(newClient);
+      renderClientTable();
+      document.getElementById('addClientForm').reset();
+      bootstrap.Modal.getInstance(document.getElementById('addClientModal')).hide();
+    });
+
+    renderClientTable(); // Initial render
+  </script>
+</body>
+</html>
