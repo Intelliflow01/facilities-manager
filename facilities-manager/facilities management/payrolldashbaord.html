@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payroll Processing</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .payroll-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%; /* Percentage-based width */
+    }
+    .btn-action {
+      font-size: 1rem;
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-process {
+      background: #6a11cb;
+      color: white;
+    }
+    .btn-export {
+      background: #28a745;
+      color: white;
+    }
+    .btn-export:hover {
+      background: #218838;
+    }
+    .payroll-table {
+      margin-top: 20px;
+      overflow-x: auto; /* Allow horizontal scrolling for tables */
+      width: 100%; /* Full width */
+    }
+    .payroll-table table {
+      width: 100%; /* Full width */
+      border-collapse: collapse;
+    }
+    .payroll-table th, .payroll-table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .payroll-table th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Payroll Processing</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="display-4">Payroll Processing</h1>
+    <p class="lead">Manage and process employee payrolls.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="center-content">
+    <!-- Payroll List Section -->
+    <div class="payroll-section">
+      <h3 class="text-center">Employee Payroll List</h3>
+      <div class="payroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Salary</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="payrollListBody">
+            <!-- Payroll data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center mt-3">
+        <button class="btn btn-process" onclick="processPayroll()">
+          <i class="fas fa-cogs"></i> Process Payroll
+        </button>
+        <button class="btn btn-export" onclick="exportPayroll()">
+          <i class="fas fa-file-export"></i> Export Payroll
+        </button>
+      </div>
+    </div>
+
+    <!-- Salary Calculation Section -->
+    <div class="payroll-section">
+      <h3 class="text-center">Salary Calculation</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="employeeId" class="form-label">Employee ID</label>
+          <input type="text" class="form-control" id="employeeId" required>
+        </div>
+        <div class="col-md-6">
+          <label for="salary" class="form-label">Salary</label>
+          <input type="number" class="form-control" id="salary" required>
+        </div>
+        <div class="col-md-12 text-center mt-3">
+          <button class="btn btn-process w-100" onclick="calculateSalary()">
+            <i class="fas fa-calculator"></i> Calculate Salary
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    Action Successful!
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Simulated payroll data
+    let payrollData = [
+      {
+        name: "John Doe",
+        id: "EMP123",
+        salary: "$5000",
+        status: "Pending"
+      },
+      {
+        name: "Jane Smith",
+        id: "EMP456",
+        salary: "$4500",
+        status: "Approved"
+      }
+    ];
+
+    // Function to load payroll data
+    function loadPayrollData() {
+      const payrollListBody = document.getElementById('payrollListBody');
+      payrollListBody.innerHTML = payrollData.map(entry => `
+        <tr>
+          <td>${entry.name}</td>
+          <td>${entry.id}</td>
+          <td>${entry.salary}</td>
+          <td>${entry.status}</td>
+          <td>
+            <button class="btn btn-action btn-approve" onclick="approvePayroll('${entry.id}')">Approve</button>
+            <button class="btn btn-action btn-reject" onclick="rejectPayroll('${entry.id}')">Reject</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Function to process payroll
+    function processPayroll() {
+      showNotification('Payroll processed successfully!');
+    }
+
+    // Function to export payroll
+    function exportPayroll() {
+      showNotification('Payroll exported successfully!');
+    }
+
+    // Function to calculate salary
+    function calculateSalary() {
+      const employeeId = document.getElementById('employeeId').value;
+      const salary = document.getElementById('salary').value;
+      showNotification(`Salary calculated for ${employeeId}: $${salary}`);
+    }
+
+    // Function to approve payroll
+    function approvePayroll(employeeId) {
+      const entry = payrollData.find(entry => entry.id === employeeId);
+      if (entry) {
+        entry.status = "Approved";
+        loadPayrollData();
+        showNotification(`Payroll approved for ${employeeId}`);
+      }
+    }
+
+    // Function to reject payroll
+    function rejectPayroll(employeeId) {
+      const entry = payrollData.find(entry => entry.id === employeeId);
+      if (entry) {
+        entry.status = "Rejected";
+        loadPayrollData();
+        showNotification(`Payroll rejected for ${employeeId}`);
+      }
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    // Load initial data
+    loadPayrollData();
+  </script>
+</body>
+</html>

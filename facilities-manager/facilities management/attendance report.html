@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reports & Dashboard</title>
+  <title>Payroll Processing</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       background-color: #f8f9fa;
-      height: 100vh;
+      height: auto;
       margin: 0;
       padding: 0;
-      overflow-x: hidden; /* Only overflow-x: hidden */
+      overflow-x: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -37,24 +37,24 @@
     .nav-link:hover {
       color: #f1f1f1 !important;
     }
-    .report-section {
+    .payroll-section {
       background: white;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      margin: 20px;
+      margin: 20px auto;
       width: 90%; /* Percentage-based width */
-      flex-direction: row;
     }
     .btn-action {
       font-size: 1rem;
-      margin-top: 15px;
+      padding: 10px 15px;
+      margin: 5px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    .btn-generate {
+    .btn-process {
       background: #6a11cb;
       color: white;
     }
@@ -65,21 +65,33 @@
     .btn-export:hover {
       background: #218838;
     }
-    .report-history {
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+    .btn-reject {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-approve:disabled, .btn-reject:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .payroll-table {
       margin-top: 20px;
       overflow-x: auto; /* Allow horizontal scrolling for tables */
       width: 100%; /* Full width */
     }
-    .report-history table {
+    .payroll-table table {
       width: 100%; /* Full width */
       border-collapse: collapse;
     }
-    .report-history th, .report-history td {
+    .payroll-table th, .payroll-table td {
       padding: 10px;
       text-align: center;
       border: 1px solid #ddd;
     }
-    .report-history th {
+    .payroll-table th {
       background-color: #6a11cb;
       color: white;
     }
@@ -101,13 +113,6 @@
       flex-grow: 1;
       padding: 20px;
       width: 100%; /* Full width */
-    }
-    .align-items-center {
-      display: flex;
-      align-items: center; /* Align items vertically */
-    }
-    .form-control, .btn-generate {
-      height: 38px; /* Ensure same height for dropdown and button */
     }
   </style>
 </head>
@@ -134,7 +139,7 @@
             <a class="nav-link" href="#">Warnings & Notices</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Reports & Dashboard</a>
+            <a class="nav-link active" href="#">Payroll Processing</a>
           </li>
         </ul>
       </div>
@@ -143,82 +148,43 @@
 
   <!-- Header -->
   <div class="header">
-    <h1 class="display-4">Reports & Dashboard</h1>
-    <p class="lead">Generate and manage attendance reports.</p>
+    <h1 class="display-4">Payroll Processing</h1>
+    <p class="lead">Manage and process employee payrolls.</p>
   </div>
 
   <!-- Main Content -->
   <div class="center-content">
-    <!-- Generate Report Section -->
-    <div class="report-section">
-      <h3 class="text-center">Generate Report</h3>
-      <div class="row align-items-center"> <!-- Added align-items-center class -->
-        <div class="col-md-6">
-          <label for="timePeriod" class="form-label">Select Time Period</label>
-          <select id="timePeriod" class="form-control">
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-          </select>
-        </div>
-        <div class="col-md-6">
-          <button class="btn btn-generate w-100" onclick="generateReport()">
-            <i class="fas fa-chart-line"></i> Generate Report
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Report Data Section -->
-    <div class="report-section">
-      <h3 class="text-center">Report Data</h3>
-      <div class="report-history">
+    <!-- Payroll List Section -->
+    <div class="payroll-section">
+      <h3 class="text-center">Employee Payroll List</h3>
+      <div class="payroll-table">
         <table>
           <thead>
             <tr>
-              <th>Employee ID</th>
               <th>Employee Name</th>
-              <th>Date</th>
-              <th>Punch In Time</th>
-              <th>Punch Out Time</th>
-              <th>Total Hours</th>
+              <th>Employee ID</th>
+              <th>Total Work Days</th>
+              <th>Absent Days</th>
+              <th>Late Arrivals</th>
+              <th>Overtime Hours</th>
+              <th>Paid Leaves</th>
+              <th>Unpaid Leaves</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody id="reportDataBody">
-            <!-- Report data will be populated here -->
+          <tbody id="payrollListBody">
+            <!-- Payroll data will be populated here -->
           </tbody>
         </table>
       </div>
       <div class="text-center mt-3">
-        <button class="btn btn-export" onclick="exportToExcel()">
-          <i class="fas fa-file-excel"></i> Export to Excel
+        <button class="btn btn-process" onclick="processPayroll()">
+          <i class="fas fa-cogs"></i> Process Payroll
         </button>
-        <button class="btn btn-export" onclick="exportToPDF()">
-          <i class="fas fa-file-pdf"></i> Export to PDF
+        <button class="btn btn-export" onclick="exportPayroll()">
+          <i class="fas fa-file-export"></i> Export Payroll
         </button>
-      </div>
-    </div>
-
-    <!-- Calculate Total Hours Section -->
-    <div class="report-section">
-      <h3 class="text-center">Calculate Total Hours</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <label for="employeeId" class="form-label">Employee ID</label>
-          <input type="text" class="form-control" id="employeeId" required>
-        </div>
-        <div class="col-md-6">
-          <label for="date" class="form-label">Date</label>
-          <input type="date" class="form-control" id="date" required>
-        </div>
-        <div class="col-md-12 text-center mt-3">
-          <button class="btn btn-generate w-100" onclick="calculateTotalHours()">
-            <i class="fas fa-calculator"></i> Calculate Total Hours
-          </button>
-        </div>
-        <div class="col-md-12 text-center mt-3">
-          <p id="totalHoursResult" class="text-muted"></p>
-        </div>
       </div>
     </div>
   </div>
@@ -230,118 +196,92 @@
 
   <!-- Scripts -->
   <script>
-    // Simulated report data
-    let reportData = [
+    // Simulated payroll data
+    let payrollData = [
       {
-        id: "EMP123",
         name: "John Doe",
-        date: "2023-10-25",
-        punchIn: "09:00 AM",
-        punchOut: "05:00 PM",
-        totalHours: "8h 0m",
-        status: "Present"
+        id: "EMP123",
+        totalWorkDays: 22,
+        absentDays: 2,
+        lateArrivals: 3,
+        overtimeHours: 5,
+        paidLeaves: 1,
+        unpaidLeaves: 1,
+        status: "Pending"
       },
       {
-        id: "EMP456",
         name: "Jane Smith",
-        date: "2023-10-25",
-        punchIn: "09:15 AM",
-        punchOut: "05:30 PM",
-        totalHours: "8h 15m",
-        status: "Late"
-      },
-      {
-        id: "EMP789",
-        name: "Alice Johnson",
-        date: "2023-10-25",
-        punchIn: "-",
-        punchOut: "-",
-        totalHours: "-",
-        status: "Absent"
+        id: "EMP456",
+        totalWorkDays: 20,
+        absentDays: 1,
+        lateArrivals: 2,
+        overtimeHours: 3,
+        paidLeaves: 2,
+        unpaidLeaves: 0,
+        status: "Pending"
       }
     ];
 
-    // Function to load report data
-    function loadReportData() {
-      const reportDataBody = document.getElementById('reportDataBody');
-      reportDataBody.innerHTML = reportData.map(entry => `
+    // Function to load payroll data
+    function loadPayrollData() {
+      const payrollListBody = document.getElementById('payrollListBody');
+      payrollListBody.innerHTML = payrollData.map(entry => `
         <tr>
-          <td>${entry.id}</td>
           <td>${entry.name}</td>
-          <td>${entry.date}</td>
-          <td>${entry.punchIn}</td>
-          <td>${entry.punchOut}</td>
-          <td>${entry.totalHours}</td>
+          <td>${entry.id}</td>
+          <td>${entry.totalWorkDays}</td>
+          <td>${entry.absentDays}</td>
+          <td>${entry.lateArrivals}</td>
+          <td>${entry.overtimeHours}</td>
+          <td>${entry.paidLeaves}</td>
+          <td>${entry.unpaidLeaves}</td>
           <td>${entry.status}</td>
+          <td>
+            <button class="btn btn-action btn-approve" onclick="approvePayroll('${entry.id}')" ${entry.status === "Rejected" ? "disabled" : ""}>Approve</button>
+            <button class="btn btn-action btn-reject" onclick="rejectPayroll('${entry.id}')" ${entry.status === "Approved" ? "disabled" : ""}>Reject</button>
+          </td>
         </tr>
       `).join('');
     }
 
-    // Function to generate report
-    function generateReport() {
-      const timePeriod = document.getElementById('timePeriod').value;
-      let filteredData = reportData;
+    // Function to process payroll
+    function processPayroll() {
+      payrollData.forEach(entry => {
+        let salary = 5000; // Base salary
+        let latePenalty = entry.lateArrivals * 50; // $50 penalty per late arrival
+        let overtimePayment = entry.overtimeHours * 20; // $20 per overtime hour
+        let unpaidLeaveDeduction = entry.unpaidLeaves * 100; // $100 deduction per unpaid leave
 
-      if (timePeriod === "weekly") {
-        // Simulate weekly report (last 7 days)
-        filteredData = reportData.filter(entry => {
-          const entryDate = new Date(entry.date);
-          const today = new Date();
-          const diffTime = Math.abs(today - entryDate);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          return diffDays <= 7;
-        });
-      } else if (timePeriod === "monthly") {
-        // Simulate monthly report (last 30 days)
-        filteredData = reportData.filter(entry => {
-          const entryDate = new Date(entry.date);
-          const today = new Date();
-          const diffTime = Math.abs(today - entryDate);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          return diffDays <= 30;
-        });
-      }
-
-      // Update report data
-      const reportDataBody = document.getElementById('reportDataBody');
-      reportDataBody.innerHTML = filteredData.map(entry => `
-        <tr>
-          <td>${entry.id}</td>
-          <td>${entry.name}</td>
-          <td>${entry.date}</td>
-          <td>${entry.punchIn}</td>
-          <td>${entry.punchOut}</td>
-          <td>${entry.totalHours}</td>
-          <td>${entry.status}</td>
-        </tr>
-      `).join('');
-
-      showNotification(`${timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)} report generated successfully!`);
+        let netSalary = salary - latePenalty - unpaidLeaveDeduction + overtimePayment;
+        entry.status = "Processed";
+        showNotification(`Payroll processed for ${entry.name}: Net Salary $${netSalary}`);
+      });
+      loadPayrollData();
     }
 
-    // Function to calculate total hours
-    function calculateTotalHours() {
-      const employeeId = document.getElementById('employeeId').value;
-      const date = document.getElementById('date').value;
+    // Function to export payroll
+    function exportPayroll() {
+      showNotification('Payroll exported successfully!');
+    }
 
-      const entry = reportData.find(entry => entry.id === employeeId && entry.date === date);
+    // Function to approve payroll
+    function approvePayroll(employeeId) {
+      const entry = payrollData.find(entry => entry.id === employeeId);
       if (entry) {
-        document.getElementById('totalHoursResult').textContent = `Total Hours: ${entry.totalHours}`;
-      } else {
-        document.getElementById('totalHoursResult').textContent = "No data found for the given employee and date.";
+        entry.status = "Approved";
+        loadPayrollData();
+        showNotification(`Payroll approved for ${employeeId}`);
       }
     }
 
-    // Function to export to Excel
-    function exportToExcel() {
-      showNotification('Exporting report to Excel...');
-      // Implement Excel export logic here
-    }
-
-    // Function to export to PDF
-    function exportToPDF() {
-      showNotification('Exporting report to PDF...');
-      // Implement PDF export logic here
+    // Function to reject payroll
+    function rejectPayroll(employeeId) {
+      const entry = payrollData.find(entry => entry.id === employeeId);
+      if (entry) {
+        entry.status = "Rejected";
+        loadPayrollData();
+        showNotification(`Payroll rejected for ${employeeId}`);
+      }
     }
 
     // Show notification
@@ -355,7 +295,7 @@
     }
 
     // Load initial data
-    loadReportData();
+    loadPayrollData();
   </script>
 </body>
 </html>
