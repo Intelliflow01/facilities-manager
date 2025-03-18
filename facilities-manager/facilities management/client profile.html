@@ -10,7 +10,7 @@
     body {
       background-color: #f8f9fa;
       height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
     }
     .header {
       background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -73,6 +73,40 @@
     .btn-add-client:hover {
       background: #5a0bb5;
     }
+    .btn-send-reminder {
+      background: #28a745;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .btn-send-reminder:hover {
+      background: #218838;
+    }
+    .btn-action {
+      margin: 2px;
+      font-size: 0.9rem;
+    }
+    .btn-active {
+      background: #28a745;
+      color: white;
+    }
+    .btn-deactivate {
+      background: #ffc107;
+      color: black;
+    }
+    .btn-blacklist {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .btn-profile-action {
+      margin: 5px;
+      width: 100%;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -128,6 +162,9 @@
           <button class="btn btn-add-client" data-bs-toggle="modal" data-bs-target="#addClientModal">
             <i class="fas fa-plus"></i> Add Client
           </button>
+          <button class="btn btn-send-reminder" onclick="sendContractRenewalReminders()">
+            <i class="fas fa-bell"></i> Send Renewal Reminders
+          </button>
           <table class="table table-hover">
             <thead>
               <tr>
@@ -170,6 +207,7 @@
                   <option value="Active">Active</option>
                   <option value="Pending">Pending</option>
                   <option value="Inactive">Inactive</option>
+                  <option value="Blacklisted">Blacklisted</option>
                 </select>
               </div>
               <div class="col-md-6">
@@ -209,7 +247,9 @@
         status: "Active",
         contractStartDate: "2023-01-01",
         contractExpiryDate: "2023-12-31",
-        employeesAssigned: ["John Doe", "Jane Smith"]
+        employeesAssigned: ["John Doe", "Jane Smith"],
+        email: "clientA@example.com",
+        phone: "+1234567890"
       },
       {
         id: 2,
@@ -217,7 +257,9 @@
         status: "Pending",
         contractStartDate: "2023-02-01",
         contractExpiryDate: "2023-11-30",
-        employeesAssigned: ["Alice Johnson"]
+        employeesAssigned: ["Alice Johnson"],
+        email: "clientB@example.com",
+        phone: "+0987654321"
       },
       {
         id: 3,
@@ -225,7 +267,9 @@
         status: "Inactive",
         contractStartDate: "2023-03-01",
         contractExpiryDate: "2023-10-31",
-        employeesAssigned: []
+        employeesAssigned: [],
+        email: "clientC@example.com",
+        phone: "+1122334455"
       }
     ];
 
@@ -243,7 +287,16 @@
           <td>${client.employeesAssigned.join(", ")}</td>
           <td>
             <button class="btn btn-primary btn-sm view-client-btn" data-id="${client.id}">
-              <i class="fas fa-eye"></i> View Profile
+              <i class="fas fa-eye"></i> View
+            </button>
+            <button class="btn btn-action btn-active" onclick="markActive('${client.id}')" ${client.status === "Active" ? "disabled" : ""}>
+              <i class="fas fa-check"></i> Active
+            </button>
+            <button class="btn btn-action btn-deactivate" onclick="markDeactivate('${client.id}')" ${client.status === "Inactive" ? "disabled" : ""}>
+              <i class="fas fa-times"></i> Deactivate
+            </button>
+            <button class="btn btn-action btn-blacklist" onclick="markBlacklist('${client.id}')" ${client.status === "Blacklisted" ? "disabled" : ""}>
+              <i class="fas fa-ban"></i> Blacklist
             </button>
           </td>
         </tr>
@@ -261,8 +314,86 @@
           <li class="list-group-item"><strong>Contract Start Date:</strong> ${client.contractStartDate}</li>
           <li class="list-group-item"><strong>Contract Expiry Date:</strong> ${client.contractExpiryDate}</li>
           <li class="list-group-item"><strong>Employees Assigned:</strong> ${client.employeesAssigned.join(", ")}</li>
+          <li class="list-group-item"><strong>Email:</strong> ${client.email}</li>
+          <li class="list-group-item"><strong>Phone:</strong> ${client.phone}</li>
         </ul>
+        <div class="mt-3">
+          <button class="btn btn-secondary btn-profile-action" onclick="viewQuotation('${client.id}')">
+            <i class="fas fa-file-alt"></i> View Quotation
+          </button>
+          <button class="btn btn-secondary btn-profile-action" onclick="viewContract('${client.id}')">
+            <i class="fas fa-file-contract"></i> View Contract
+          </button>
+          <button class="btn btn-secondary btn-profile-action" onclick="viewLastInvoice('${client.id}')">
+            <i class="fas fa-file-invoice"></i> View Last Invoice
+          </button>
+          <button class="btn btn-secondary btn-profile-action" onclick="viewLastReceipts('${client.id}')">
+            <i class="fas fa-receipt"></i> View Last Receipts
+          </button>
+        </div>
       `;
+    }
+
+    // Function to mark client as Active
+    function markActive(clientId) {
+      const client = clients.find(c => c.id === parseInt(clientId));
+      if (client) {
+        client.status = "Active";
+        renderClientTable();
+        renderClientProfile(client);
+      }
+    }
+
+    // Function to mark client as Inactive
+    function markDeactivate(clientId) {
+      const client = clients.find(c => c.id === parseInt(clientId));
+      if (client) {
+        client.status = "Inactive";
+        renderClientTable();
+        renderClientProfile(client);
+      }
+    }
+
+    // Function to mark client as Blacklisted
+    function markBlacklist(clientId) {
+      const client = clients.find(c => c.id === parseInt(clientId));
+      if (client) {
+        client.status = "Blacklisted";
+        renderClientTable();
+        renderClientProfile(client);
+      }
+    }
+
+    // Function to send contract renewal reminders
+    function sendContractRenewalReminders() {
+      clients.forEach(client => {
+        if (client.status === "Active" || client.status === "Pending") {
+          const emailLink = `mailto:${client.email}?subject=Contract Renewal Reminder&body=Dear ${client.name}, your contract is expiring on ${client.contractExpiryDate}. Please renew it soon.`;
+          const whatsappLink = `https://wa.me/${client.phone}?text=Dear ${client.name}, your contract is expiring on ${client.contractExpiryDate}. Please renew it soon.`;
+
+          // Open email and WhatsApp links
+          window.open(emailLink, '_blank');
+          window.open(whatsappLink, '_blank');
+        }
+      });
+      alert("Contract renewal reminders sent successfully!");
+    }
+
+    // Functions for the new buttons
+    function viewQuotation(clientId) {
+      alert(`View Quotation for Client ID: ${clientId}`);
+    }
+
+    function viewContract(clientId) {
+      alert(`View Contract for Client ID: ${clientId}`);
+    }
+
+    function viewLastInvoice(clientId) {
+      alert(`View Last Invoice for Client ID: ${clientId}`);
+    }
+
+    function viewLastReceipts(clientId) {
+      alert(`View Last Receipts for Client ID: ${clientId}`);
     }
 
     document.addEventListener('click', (e) => {
@@ -283,7 +414,9 @@
         status: document.getElementById('clientStatus').value,
         contractStartDate: document.getElementById('contractStartDate').value,
         contractExpiryDate: document.getElementById('contractExpiryDate').value,
-        employeesAssigned: Array.from(document.getElementById('employeesAssigned').selectedOptions).map(opt => opt.value)
+        employeesAssigned: Array.from(document.getElementById('employeesAssigned').selectedOptions).map(opt => opt.value),
+        email: "newclient@example.com", // Default email, can be updated
+        phone: "+1234567890" // Default phone, can be updated
       };
       clients.push(newClient);
       renderClientTable();

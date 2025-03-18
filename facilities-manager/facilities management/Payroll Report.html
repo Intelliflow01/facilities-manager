@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payroll Reports & Payslips</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .payroll-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%; /* Percentage-based width */
+    }
+    .btn-action {
+      font-size: 1rem;
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-download {
+      background: #28a745;
+      color: white;
+    }
+    .btn-download:hover {
+      background: #218838;
+    }
+    .btn-share {
+      background: #6a11cb;
+      color: white;
+    }
+    .btn-share:hover {
+      background: #2575fc;
+    }
+    .btn-bulk {
+      background: #ffc107;
+      color: black;
+    }
+    .btn-bulk:hover {
+      background: #e0a800;
+    }
+    .payroll-table {
+      margin-top: 20px;
+      overflow-x: auto; /* Allow horizontal scrolling for tables */
+      width: 100%; /* Full width */
+    }
+    .payroll-table table {
+      width: 100%; /* Full width */
+      border-collapse: collapse;
+    }
+    .payroll-table th, .payroll-table td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .payroll-table th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
+    .filter-section {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .filter-section select, .filter-section input {
+      flex: 1;
+      min-width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="payrolldashboard.html">Payroll Processing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Payroll Reports</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="display-4">Payroll Reports & Payslips</h1>
+    <p class="lead">Generate and download payroll reports and payslips.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="center-content">
+    <!-- Payroll Processed Employees Table -->
+    <div class="payroll-section">
+      <h3 class="text-center">Payroll Processed Employees</h3>
+      <div class="filter-section">
+        <select class="form-control" id="filterDepartment">
+          <option value="all">All Departments</option>
+          <option value="hr">HR</option>
+          <option value="it">IT</option>
+          <option value="finance">Finance</option>
+        </select>
+        <input type="month" class="form-control" id="filterMonth">
+        <input type="text" class="form-control" id="filterEmployee" placeholder="Employee Name/ID">
+        <select class="form-control" id="filterSite">
+          <option value="all">All Sites</option>
+          <option value="site1">Site 1</option>
+          <option value="site2">Site 2</option>
+        </select>
+        <button class="btn btn-download" onclick="downloadFilteredReport()">
+          <i class="fas fa-download"></i> Download Salary Report
+        </button>
+      </div>
+      <div class="payroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Department</th>
+              <th>Site</th>
+              <th>Net Salary</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="processedEmployeesBody">
+            <!-- Processed payroll data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center mt-3">
+        <button class="btn btn-bulk" onclick="shareBulkPayslips()">
+          <i class="fas fa-share"></i> Share in Bulk
+        </button>
+      </div>
+    </div>
+
+    <!-- Tax Details Table -->
+    <div class="payroll-section">
+      <h3 class="text-center">Tax Details</h3>
+      <div class="filter-section">
+        <select class="form-control" id="filterTaxType">
+          <option value="all">All Taxes</option>
+          <option value="tds">TDS</option>
+          <option value="pf">PF</option>
+          <option value="esi">ESI</option>
+        </select>
+        <input type="month" class="form-control" id="filterTaxMonth">
+        <input type="date" class="form-control" id="filterStartDate">
+        <input type="date" class="form-control" id="filterEndDate">
+        <button class="btn btn-download" onclick="applyTaxFilters()">
+          <i class="fas fa-filter"></i> Apply Filters
+        </button>
+      </div>
+      <div class="payroll-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Salary</th>
+              <th>TDS</th>
+              <th>PF</th>
+              <th>ESI</th>
+              <th>Total Tax</th>
+            </tr>
+          </thead>
+          <tbody id="taxDetailsBody">
+            <!-- Tax details data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    Action Successful!
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Simulated processed payroll data
+    let processedPayrollData = [
+      {
+        name: "John Doe",
+        id: "EMP123",
+        department: "HR",
+        site: "Site 1",
+        netSalary: 21750,
+        status: "Approved",
+        email: "john.doe@example.com"
+      },
+      {
+        name: "Jane Smith",
+        id: "EMP456",
+        department: "IT",
+        site: "Site 2",
+        netSalary: 22500,
+        status: "Approved",
+        email: "jane.smith@example.com"
+      }
+    ];
+
+    // Simulated tax details data
+    let taxDetailsData = [
+      {
+        name: "John Doe",
+        id: "EMP123",
+        salary: 30000,
+        tds: 3000,
+        pf: 3600,
+        esi: 525,
+        totalTax: 7125
+      },
+      {
+        name: "Jane Smith",
+        id: "EMP456",
+        salary: 35000,
+        tds: 3500,
+        pf: 4200,
+        esi: 612.5,
+        totalTax: 8312.5
+      }
+    ];
+
+    // Function to load processed payroll data
+    function loadProcessedPayrollData() {
+      const processedEmployeesBody = document.getElementById('processedEmployeesBody');
+      processedEmployeesBody.innerHTML = processedPayrollData.map(entry => `
+        <tr>
+          <td>${entry.name}</td>
+          <td>${entry.id}</td>
+          <td>${entry.department}</td>
+          <td>${entry.site}</td>
+          <td>₹${entry.netSalary.toFixed(2)}</td>
+          <td>${entry.status}</td>
+          <td>
+            <button class="btn btn-action btn-download" onclick="downloadPayslip('${entry.id}')">
+              <i class="fas fa-download"></i> Download
+            </button>
+            <button class="btn btn-action btn-share" onclick="sharePayslip('${entry.id}')">
+              <i class="fas fa-share"></i> Share
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Function to load tax details data
+    function loadTaxDetailsData() {
+      const taxDetailsBody = document.getElementById('taxDetailsBody');
+      taxDetailsBody.innerHTML = taxDetailsData.map(entry => `
+        <tr>
+          <td>${entry.name}</td>
+          <td>${entry.id}</td>
+          <td>₹${entry.salary.toFixed(2)}</td>
+          <td>₹${entry.tds.toFixed(2)}</td>
+          <td>₹${entry.pf.toFixed(2)}</td>
+          <td>₹${entry.esi.toFixed(2)}</td>
+          <td>₹${entry.totalTax.toFixed(2)}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Function to download filtered salary report
+    function downloadFilteredReport() {
+      const department = document.getElementById('filterDepartment').value;
+      const month = document.getElementById('filterMonth').value;
+      const employee = document.getElementById('filterEmployee').value;
+      const site = document.getElementById('filterSite').value;
+      showNotification(`Downloading salary report for ${month}, Department: ${department}, Employee: ${employee}, Site: ${site}`);
+    }
+
+    // Function to share payslip
+    function sharePayslip(employeeId) {
+      const entry = processedPayrollData.find(entry => entry.id === employeeId);
+      if (entry) {
+        const message = `Payslip for ${entry.name} (${entry.id}): Net Salary ₹${entry.netSalary.toFixed(2)}`;
+        const emailLink = `mailto:${entry.email}?subject=Payslip for ${entry.name}&body=${message}`;
+        const whatsappLink = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+        // Open share options
+        window.open(emailLink, '_blank');
+        window.open(whatsappLink, '_blank');
+        showNotification(`Payslip shared for ${entry.name}`);
+      }
+    }
+
+    // Function to share payslips in bulk
+    function shareBulkPayslips() {
+      processedPayrollData.forEach(entry => {
+        const message = `Payslip for ${entry.name} (${entry.id}): Net Salary ₹${entry.netSalary.toFixed(2)}`;
+        const emailLink = `mailto:${entry.email}?subject=Payslip for ${entry.name}&body=${message}`;
+        window.open(emailLink, '_blank');
+      });
+      showNotification('Payslips shared in bulk!');
+    }
+
+    // Function to apply tax filters
+    function applyTaxFilters() {
+      const taxType = document.getElementById('filterTaxType').value;
+      const month = document.getElementById('filterTaxMonth').value;
+      const startDate = document.getElementById('filterStartDate').value;
+      const endDate = document.getElementById('filterEndDate').value;
+      showNotification(`Applying filters: Tax Type - ${taxType}, Month - ${month}, Date Range - ${startDate} to ${endDate}`);
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    // Load initial data
+    loadProcessedPayrollData();
+    loadTaxDetailsData();
+  </script>
+</body>
+</html>

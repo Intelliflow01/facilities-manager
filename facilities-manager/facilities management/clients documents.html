@@ -48,6 +48,38 @@
     .btn-generate-document:hover {
       background: #5a0bb5;
     }
+    .btn-preview {
+      background: #28a745;
+      color: white;
+    }
+    .btn-preview:hover {
+      background: #218838;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
   </style>
 </head>
 <body>
@@ -139,15 +171,101 @@
             <div class="row">
               <div class="col-md-6">
                 <label for="quotationClient" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="quotationClient" required>
+                <select class="form-control" id="quotationClient" required>
+                  <option value="Client A">Client A</option>
+                  <option value="Client B">Client B</option>
+                  <option value="Client C">Client C</option>
+                </select>
               </div>
               <div class="col-md-6">
                 <label for="quotationDate" class="form-label">Date</label>
                 <input type="date" class="form-control" id="quotationDate" required>
               </div>
               <div class="col-md-12">
-                <label for="quotationDetails" class="form-label">Quotation Details</label>
-                <textarea class="form-control" id="quotationDetails" rows="5" required></textarea>
+                <label for="quotationTemplate" class="form-label">Quotation Template (HTML)</label>
+                <textarea class="form-control" id="quotationTemplate" rows="10" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: auto; padding: 20px; border: 1px solid #000; }
+        .header, .customer-info, .terms { margin-bottom: 20px; }
+        .header h2 { text-align: right; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+        .right { text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>QUOTE</h2>
+            <p>Date: <span id="quoteDate">{{quote_date}}</span></p>
+            <p>Quote #: <span id="quoteNumber">{{quote_number}}</span></p>
+            <p>Customer ID: <span id="customerID">{{customer_id}}</span></p>
+            <p>Valid Until: <span id="validUntil">{{valid_until}}</span></p>
+        </div>
+        
+        <div class="customer-info">
+            <h3>Customer</h3>
+            <p>Name: {{customer_name}}</p>
+            <p>Company: {{company_name}}</p>
+            <p>Address: {{customer_address}}</p>
+            <p>Phone: {{customer_phone}}</p>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>Taxed</th>
+                <th>Amount</th>
+            </tr>
+            <tr>
+                <td>Service Fee</td>
+                <td>No</td>
+                <td>${{service_fee}}</td>
+            </tr>
+            <tr>
+                <td>Labor ({{labor_hours}} hours at ${{labor_rate}}/hr)</td>
+                <td>No</td>
+                <td>${{labor_cost}}</td>
+            </tr>
+            <tr>
+                <td>Parts</td>
+                <td>Yes</td>
+                <td>${{parts_cost}}</td>
+            </tr>
+            <tr>
+                <td>New client discount</td>
+                <td>No</td>
+                <td>${{discount}}</td>
+            </tr>
+        </table>
+        
+        <div class="right">
+            <p>Subtotal: ${{subtotal}}</p>
+            <p>Taxable: ${{taxable_amount}}</p>
+            <p>Tax Rate: {{tax_rate}}%</p>
+            <p>Tax Due: ${{tax_due}}</p>
+            <h3>Total Due: ${{total_due}}</h3>
+        </div>
+        
+        <div class="terms">
+            <h3>Terms and Conditions</h3>
+            <p>1. Customer will be billed after acceptance of this quote.</p>
+            <p>2. Payment is due before delivery of service and goods.</p>
+            <p>3. Please sign and return the quote to proceed.</p>
+            <p><strong>Customer Acceptance (sign below):</strong></p>
+            <p>_________________________</p>
+        </div>
+    </div>
+</body>
+</html>
+                </textarea>
               </div>
             </div>
           </form>
@@ -155,154 +273,9 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="submit" form="quotationForm" class="btn btn-primary">Generate Quotation</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Reminder Modal -->
-  <div class="modal fade" id="reminderModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create Reminder</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="reminderForm">
-            <div class="row">
-              <div class="col-md-6">
-                <label for="reminderClient" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="reminderClient" required>
-              </div>
-              <div class="col-md-6">
-                <label for="reminderType" class="form-label">Reminder Type</label>
-                <select class="form-control" id="reminderType" required>
-                  <option value="Reminder 1">Reminder 1</option>
-                  <option value="Reminder 2">Reminder 2</option>
-                  <option value="Reminder 3">Reminder 3</option>
-                </select>
-              </div>
-              <div class="col-md-12">
-                <label for="reminderMessage" class="form-label">Message</label>
-                <textarea class="form-control" id="reminderMessage" rows="5" required></textarea>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="reminderForm" class="btn btn-primary">Generate Reminder</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Contract Modal -->
-  <div class="modal fade" id="contractModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create Contract</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="contractForm">
-            <div class="row">
-              <div class="col-md-6">
-                <label for="contractClient" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="contractClient" required>
-              </div>
-              <div class="col-md-6">
-                <label for="contractDate" class="form-label">Date</label>
-                <input type="date" class="form-control" id="contractDate" required>
-              </div>
-              <div class="col-md-12">
-                <label for="contractDetails" class="form-label">Contract Details</label>
-                <textarea class="form-control" id="contractDetails" rows="5" required></textarea>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="contractForm" class="btn btn-primary">Generate Contract</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Invoice Modal -->
-  <div class="modal fade" id="invoiceModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Generate Invoice</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="invoiceForm">
-            <div class="row">
-              <div class="col-md-6">
-                <label for="invoiceClient" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="invoiceClient" required>
-              </div>
-              <div class="col-md-6">
-                <label for="invoiceDate" class="form-label">Date</label>
-                <input type="date" class="form-control" id="invoiceDate" required>
-              </div>
-              <div class="col-md-6">
-                <label for="invoiceAmount" class="form-label">Amount</label>
-                <input type="number" class="form-control" id="invoiceAmount" required>
-              </div>
-              <div class="col-md-6">
-                <label for="invoiceDescription" class="form-label">Description</label>
-                <input type="text" class="form-control" id="invoiceDescription" required>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="invoiceForm" class="btn btn-primary">Generate Invoice</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Receipt Modal -->
-  <div class="modal fade" id="receiptModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Generate Payment Receipt</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <form id="receiptForm">
-            <div class="row">
-              <div class="col-md-6">
-                <label for="receiptClient" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="receiptClient" required>
-              </div>
-              <div class="col-md-6">
-                <label for="receiptDate" class="form-label">Date</label>
-                <input type="date" class="form-control" id="receiptDate" required>
-              </div>
-              <div class="col-md-6">
-                <label for="receiptAmount" class="form-label">Amount</label>
-                <input type="number" class="form-control" id="receiptAmount" required>
-              </div>
-              <div class="col-md-6">
-                <label for="receiptDescription" class="form-label">Description</label>
-                <input type="text" class="form-control" id="receiptDescription" required>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" form="receiptForm" class="btn btn-primary">Generate Receipt</button>
+          <button class="btn btn-preview" onclick="previewQuotation()">
+            <i class="fas fa-eye"></i> Preview
+          </button>
         </div>
       </div>
     </div>
@@ -311,35 +284,103 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Sample data for clients
+    const clients = [
+      {
+        name: "Client A",
+        company_name: "Company A",
+        customer_address: "123 Main St, City A",
+        customer_phone: "+1234567890",
+        service_fee: 100,
+        labor_hours: 5,
+        labor_rate: 20,
+        parts_cost: 50,
+        discount: 10,
+        subtotal: 240,
+        taxable_amount: 50,
+        tax_rate: 10,
+        tax_due: 5,
+        total_due: 245
+      },
+      {
+        name: "Client B",
+        company_name: "Company B",
+        customer_address: "456 Elm St, City B",
+        customer_phone: "+0987654321",
+        service_fee: 150,
+        labor_hours: 10,
+        labor_rate: 25,
+        parts_cost: 75,
+        discount: 15,
+        subtotal: 460,
+        taxable_amount: 75,
+        tax_rate: 10,
+        tax_due: 7.5,
+        total_due: 467.5
+      },
+      {
+        name: "Client C",
+        company_name: "Company C",
+        customer_address: "789 Oak St, City C",
+        customer_phone: "+1122334455",
+        service_fee: 200,
+        labor_hours: 8,
+        labor_rate: 30,
+        parts_cost: 100,
+        discount: 20,
+        subtotal: 500,
+        taxable_amount: 100,
+        tax_rate: 10,
+        tax_due: 10,
+        total_due: 510
+      }
+    ];
+
+    // Function to preview Quotation
+    function previewQuotation() {
+      const clientName = document.getElementById('quotationClient').value;
+      const date = document.getElementById('quotationDate').value;
+      const client = clients.find(c => c.name === clientName);
+
+      if (client) {
+        const template = document.getElementById('quotationTemplate').value;
+        const quoteNumber = Math.floor(Math.random() * 1000); // Random quote number
+        const validUntil = new Date(new Date(date).setDate(new Date(date).getDate() + 30)).toISOString().split('T')[0]; // Valid for 30 days
+
+        let previewContent = template
+          .replace(/{{quote_date}}/g, date)
+          .replace(/{{quote_number}}/g, quoteNumber)
+          .replace(/{{customer_id}}/g, clientName)
+          .replace(/{{valid_until}}/g, validUntil)
+          .replace(/{{customer_name}}/g, client.name)
+          .replace(/{{company_name}}/g, client.company_name)
+          .replace(/{{customer_address}}/g, client.customer_address)
+          .replace(/{{customer_phone}}/g, client.customer_phone)
+          .replace(/{{service_fee}}/g, client.service_fee)
+          .replace(/{{labor_hours}}/g, client.labor_hours)
+          .replace(/{{labor_rate}}/g, client.labor_rate)
+          .replace(/{{labor_cost}}/g, client.labor_hours * client.labor_rate)
+          .replace(/{{parts_cost}}/g, client.parts_cost)
+          .replace(/{{discount}}/g, client.discount)
+          .replace(/{{subtotal}}/g, client.subtotal)
+          .replace(/{{taxable_amount}}/g, client.taxable_amount)
+          .replace(/{{tax_rate}}/g, client.tax_rate)
+          .replace(/{{tax_due}}/g, client.tax_due)
+          .replace(/{{total_due}}/g, client.total_due);
+
+        const previewWindow = window.open();
+        previewWindow.document.write(previewContent);
+        previewWindow.document.close();
+      } else {
+        alert("Client not found!");
+      }
+    }
+
     // Placeholder for document generation logic
     document.getElementById('quotationForm').addEventListener('submit', (e) => {
       e.preventDefault();
       alert('Quotation generated successfully!');
       bootstrap.Modal.getInstance(document.getElementById('quotationModal')).hide();
-    });
-
-    document.getElementById('reminderForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Reminder generated successfully!');
-      bootstrap.Modal.getInstance(document.getElementById('reminderModal')).hide();
-    });
-
-    document.getElementById('contractForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Contract generated successfully!');
-      bootstrap.Modal.getInstance(document.getElementById('contractModal')).hide();
-    });
-
-    document.getElementById('invoiceForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Invoice generated successfully!');
-      bootstrap.Modal.getInstance(document.getElementById('invoiceModal')).hide();
-    });
-
-    document.getElementById('receiptForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Payment receipt generated successfully!');
-      bootstrap.Modal.getInstance(document.getElementById('receiptModal')).hide();
     });
   </script>
 </body>

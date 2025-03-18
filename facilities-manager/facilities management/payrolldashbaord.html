@@ -9,7 +9,7 @@
   <style>
     body {
       background-color: #f8f9fa;
-      height: 100vh;
+      height: auto;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
@@ -43,7 +43,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
       margin: 20px auto;
-      width: 90%; /* Percentage-based width */
+      width: 100%; /* Percentage-based width */
     }
     .btn-action {
       font-size: 1rem;
@@ -64,6 +64,18 @@
     }
     .btn-export:hover {
       background: #218838;
+    }
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+    .btn-reject {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-approve:disabled, .btn-reject:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
     .payroll-table {
       margin-top: 20px;
@@ -121,12 +133,6 @@
             <a class="nav-link" href="#">Employee Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Assign Employees</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Warnings & Notices</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link active" href="#">Payroll Processing</a>
           </li>
         </ul>
@@ -137,7 +143,7 @@
   <!-- Header -->
   <div class="header">
     <h1 class="display-4">Payroll Processing</h1>
-    <p class="lead">Manage and process employee payrolls.</p>
+    <p class="lead">Manage and process employee payrolls efficiently.</p>
   </div>
 
   <!-- Main Content -->
@@ -151,7 +157,17 @@
             <tr>
               <th>Employee Name</th>
               <th>Employee ID</th>
-              <th>Salary</th>
+              <th>Total Work Days</th>
+              <th>Present Days</th>
+              <th>Absent Days</th>
+              <th>Late Arrivals</th>
+              <th>Overtime Hours</th>
+              <th>Paid Leaves</th>
+              <th>Unpaid Leaves</th>
+              <th>Basic Salary</th>
+              <th>Overtime Pay</th>
+              <th>Deductions</th>
+              <th>Net Salary</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -170,26 +186,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Salary Calculation Section -->
-    <div class="payroll-section">
-      <h3 class="text-center">Salary Calculation</h3>
-      <div class="row">
-        <div class="col-md-6">
-          <label for="employeeId" class="form-label">Employee ID</label>
-          <input type="text" class="form-control" id="employeeId" required>
-        </div>
-        <div class="col-md-6">
-          <label for="salary" class="form-label">Salary</label>
-          <input type="number" class="form-control" id="salary" required>
-        </div>
-        <div class="col-md-12 text-center mt-3">
-          <button class="btn btn-process w-100" onclick="calculateSalary()">
-            <i class="fas fa-calculator"></i> Calculate Salary
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Notification -->
@@ -204,49 +200,91 @@
       {
         name: "John Doe",
         id: "EMP123",
-        salary: "$5000",
+        totalWorkDays: 26,
+        presentDays: 24,
+        absentDays: 2,
+        lateArrivals: 3,
+        overtimeHours: 5,
+        paidLeaves: 1,
+        unpaidLeaves: 1,
+        basicSalary: 30000,
+        overtimeRate: 150,
+        latePenalty: 200,
+        pfRate: 0.12,
+        esiRate: 0.0175,
+        tdsRate: 0.10,
         status: "Pending"
       },
       {
         name: "Jane Smith",
         id: "EMP456",
-        salary: "$4500",
-        status: "Approved"
+        totalWorkDays: 26,
+        presentDays: 25,
+        absentDays: 1,
+        lateArrivals: 2,
+        overtimeHours: 3,
+        paidLeaves: 2,
+        unpaidLeaves: 0,
+        basicSalary: 30000,
+        overtimeRate: 150,
+        latePenalty: 200,
+        pfRate: 0.12,
+        esiRate: 0.0175,
+        tdsRate: 0.10,
+        status: "Pending"
       }
     ];
 
     // Function to load payroll data
     function loadPayrollData() {
       const payrollListBody = document.getElementById('payrollListBody');
-      payrollListBody.innerHTML = payrollData.map(entry => `
-        <tr>
-          <td>${entry.name}</td>
-          <td>${entry.id}</td>
-          <td>${entry.salary}</td>
-          <td>${entry.status}</td>
-          <td>
-            <button class="btn btn-action btn-approve" onclick="approvePayroll('${entry.id}')">Approve</button>
-            <button class="btn btn-action btn-reject" onclick="rejectPayroll('${entry.id}')">Reject</button>
-          </td>
-        </tr>
-      `).join('');
+      payrollListBody.innerHTML = payrollData.map(entry => {
+        const overtimePay = entry.overtimeHours * entry.overtimeRate;
+        const basicSalary = (entry.basicSalary / entry.totalWorkDays) * entry.presentDays;
+        const pfDeduction = basicSalary * entry.pfRate;
+        const esiDeduction = basicSalary < 21000 ? basicSalary * entry.esiRate : 0;
+        const latePenalty = entry.lateArrivals * entry.latePenalty;
+        const tdsDeduction = basicSalary * entry.tdsRate;
+        const totalDeductions = pfDeduction + esiDeduction + latePenalty + tdsDeduction;
+        const netSalary = basicSalary + overtimePay - totalDeductions;
+
+        return `
+          <tr>
+            <td>${entry.name}</td>
+            <td>${entry.id}</td>
+            <td>${entry.totalWorkDays}</td>
+            <td>${entry.presentDays}</td>
+            <td>${entry.absentDays}</td>
+            <td>${entry.lateArrivals}</td>
+            <td>${entry.overtimeHours}</td>
+            <td>${entry.paidLeaves}</td>
+            <td>${entry.unpaidLeaves}</td>
+            <td>₹${basicSalary.toFixed(2)}</td>
+            <td>₹${overtimePay.toFixed(2)}</td>
+            <td>₹${totalDeductions.toFixed(2)}</td>
+            <td>₹${netSalary.toFixed(2)}</td>
+            <td>${entry.status}</td>
+            <td>
+              <button class="btn btn-action btn-approve" onclick="approvePayroll('${entry.id}')" ${entry.status === "Rejected" ? "disabled" : ""}>Approve</button>
+              <button class="btn btn-action btn-reject" onclick="rejectPayroll('${entry.id}')" ${entry.status === "Approved" ? "disabled" : ""}>Reject</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     // Function to process payroll
     function processPayroll() {
+      payrollData.forEach(entry => {
+        entry.status = "Processed";
+      });
+      loadPayrollData();
       showNotification('Payroll processed successfully!');
     }
 
     // Function to export payroll
     function exportPayroll() {
       showNotification('Payroll exported successfully!');
-    }
-
-    // Function to calculate salary
-    function calculateSalary() {
-      const employeeId = document.getElementById('employeeId').value;
-      const salary = document.getElementById('salary').value;
-      showNotification(`Salary calculated for ${employeeId}: $${salary}`);
     }
 
     // Function to approve payroll
