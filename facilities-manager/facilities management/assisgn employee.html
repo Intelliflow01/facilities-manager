@@ -92,45 +92,45 @@
   </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Agency Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Employee Management
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
-                            <li><a class="dropdown-item" href="employee directory.html">Employee Directory</a></li>
-                            <li><a class="dropdown-item" href="employee profile.html">Employee Profile</a></li>
-                            <li><a class="dropdown-item" href="assisgn employee.html">Assign Employees</a></li>
-                            <li><a class="dropdown-item" href="employee warnings.html">Employee Warnings</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Attendance
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="attendanceDropdown">
-                            <li><a class="dropdown-item" href="attendance dashbaord.html">Attendance Dashboard</a></li>
-                            <li><a class="dropdown-item" href="mark attendance.html">Attendance Marking</a></li>
-                            <li><a class="dropdown-item" href="attendance correction request.html">Attendance Correction Request</a></li>
-                            <li><a class="dropdown-item" href="attendance report.html">Attendance Reports</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#">💰 Payroll</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">📊 Reports</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">⚙️ Settings</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Agency Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Employee Management
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
+              <li><a class="dropdown-item" href="employee directory.html">Employee Directory</a></li>
+              <li><a class="dropdown-item" href="employee profile.html">Employee Profile</a></li>
+              <li><a class="dropdown-item" href="assisgn employee.html">Assign Employees</a></li>
+              <li><a class="dropdown-item" href="employee warnings.html">Employee Warnings</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Attendance
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="attendanceDropdown">
+              <li><a class="dropdown-item" href="attendance dashbaord.html">Attendance Dashboard</a></li>
+              <li><a class="dropdown-item" href="mark attendance.html">Attendance Marking</a></li>
+              <li><a class="dropdown-item" href="attendance correction request.html">Attendance Correction Request</a></li>
+              <li><a class="dropdown-item" href="attendance report.html">Attendance Reports</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="#">💰 Payroll</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">📊 Reports</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">⚙️ Settings</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
   <!-- Header -->
   <div class="header text-center">
@@ -177,6 +177,7 @@
           <tr>
             <th>Employee</th>
             <th>Client</th>
+            <th>Location</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -231,6 +232,20 @@
     const assignedTableBody = document.getElementById('assignedTableBody');
     const assignments = [];
 
+    // Client Location Mapping
+    const clientLocations = {
+      1: "Mumbai",
+      2: "Hyderabad",
+      3: "Delhi"
+    };
+
+    // Auto Payroll Adjustment Logic
+    function adjustPayroll(employeeId, clientId) {
+      // Example: Adjust payroll based on client location
+      const location = clientLocations[clientId];
+      console.log(`Payroll adjusted for Employee ${employeeId} assigned to ${location}`);
+    }
+
     // Drag and Drop Functionality
     const employeeList = document.getElementById('employeeList');
     const clientList = document.getElementById('clientList');
@@ -250,11 +265,14 @@
       const employee = document.querySelector(`.employee-item[data-id="${employeeId}"]`);
       const client = e.target.closest('.client-item');
       if (employee && client) {
+        const clientId = client.getAttribute('data-id');
         const assignment = {
           employee: employee.textContent,
-          client: client.textContent
+          client: client.textContent,
+          location: clientLocations[clientId]
         };
         assignments.push(assignment);
+        adjustPayroll(employeeId, clientId); // Auto Payroll Adjustment
         renderAssignedTable();
         clientList.style.backgroundColor = '#fff';
       }
@@ -266,6 +284,7 @@
         <tr>
           <td>${assignment.employee}</td>
           <td>${assignment.client}</td>
+          <td>${assignment.location}</td>
           <td>
             <button class="btn btn-danger btn-sm remove-assignment-btn">
               <i class="fas fa-trash"></i> Remove
@@ -290,11 +309,14 @@
       e.preventDefault();
       const employeeSelect = document.getElementById('employeeSelect');
       const clientSelect = document.getElementById('clientSelect');
+      const clientId = clientSelect.value;
       const assignment = {
         employee: employeeSelect.options[employeeSelect.selectedIndex].text,
-        client: clientSelect.options[clientSelect.selectedIndex].text
+        client: clientSelect.options[clientSelect.selectedIndex].text,
+        location: clientLocations[clientId]
       };
       assignments.push(assignment);
+      adjustPayroll(employeeSelect.value, clientId); // Auto Payroll Adjustment
       renderAssignedTable();
       document.getElementById('addAssignmentForm').reset();
       bootstrap.Modal.getInstance(document.getElementById('addAssignmentModal')).hide();

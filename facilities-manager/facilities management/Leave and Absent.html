@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave & Absent Handling</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; /* Only overflow-x: hidden */
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .leave-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%; /* Percentage-based width */
+    }
+    .btn-action {
+      font-size: 1rem;
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-approve {
+      background: #28a745;
+      color: white;
+    }
+    .btn-reject {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-request {
+      background: #6a11cb;
+      color: white;
+    }
+    .btn-request:hover {
+      background: #5a0bb5;
+    }
+    .leave-history {
+      margin-top: 20px;
+      overflow-x: auto; /* Allow horizontal scrolling for tables */
+      width: 100%; /* Full width */
+    }
+    .leave-history table {
+      width: 100%; /* Full width */
+      border-collapse: collapse;
+    }
+    .leave-history th, .leave-history td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .leave-history th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Leave & Absent Handling</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="display-4">Leave & Absent Handling</h1>
+    <p class="lead">Manage leave requests and absenteeism.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="center-content">
+    <!-- Leave Request Form -->
+    <div class="leave-section">
+      <h3 class="text-center">Request Leave</h3>
+      <form id="leaveRequestForm">
+        <div class="mb-3">
+          <label for="employeeId" class="form-label">Employee ID</label>
+          <input type="text" class="form-control" id="employeeId" required>
+        </div>
+        <div class="mb-3">
+          <label for="leaveDate" class="form-label">Leave Date</label>
+          <input type="date" class="form-control" id="leaveDate" required>
+        </div>
+        <div class="mb-3">
+          <label for="reason" class="form-label">Reason</label>
+          <textarea class="form-control" id="reason" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-request w-100">
+          <i class="fas fa-paper-plane"></i> Submit Leave Request
+        </button>
+      </form>
+    </div>
+
+    <!-- Leave Approval Section (Admin) -->
+    <div class="leave-section">
+      <h3 class="text-center">Leave Approval Requests</h3>
+      <div class="leave-history">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Leave Date</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="leaveRequestsBody">
+            <!-- Leave requests will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Absent Handling Section -->
+    <div class="leave-section">
+      <h3 class="text-center">Absent Employees</h3>
+      <div class="leave-history">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="absentEmployeesBody">
+            <!-- Absent employees will be populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    Action Successful!
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Simulated leave requests data
+    let leaveRequests = [
+      {
+        id: "EMP123",
+        name: "John Doe",
+        leaveDate: "2023-10-25",
+        reason: "Medical appointment",
+        status: "Pending"
+      },
+      {
+        id: "EMP456",
+        name: "Jane Smith",
+        leaveDate: "2023-10-26",
+        reason: "Family event",
+        status: "Pending"
+      }
+    ];
+
+    // Simulated absent employees data
+    let absentEmployees = [
+      {
+        id: "EMP789",
+        name: "Alice Johnson",
+        date: "2023-10-24",
+        status: "Absent"
+      }
+    ];
+
+    // Function to load leave requests
+    function loadLeaveRequests() {
+      const leaveRequestsBody = document.getElementById('leaveRequestsBody');
+      leaveRequestsBody.innerHTML = leaveRequests.map(request => `
+        <tr>
+          <td>${request.id}</td>
+          <td>${request.name}</td>
+          <td>${request.leaveDate}</td>
+          <td>${request.reason}</td>
+          <td>${request.status}</td>
+          <td>
+            ${request.status === "Pending" ? `
+              <button class="btn-action btn-approve" onclick="approveLeave('${request.id}', '${request.leaveDate}')">Approve</button>
+              <button class="btn-action btn-reject" onclick="rejectLeave('${request.id}', '${request.leaveDate}')">Reject</button>
+            ` : ""}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Function to load absent employees
+    function loadAbsentEmployees() {
+      const absentEmployeesBody = document.getElementById('absentEmployeesBody');
+      absentEmployeesBody.innerHTML = absentEmployees.map(employee => `
+        <tr>
+          <td>${employee.id}</td>
+          <td>${employee.name}</td>
+          <td>${employee.date}</td>
+          <td>${employee.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Function to handle leave request submission
+    document.getElementById('leaveRequestForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const employeeId = document.getElementById('employeeId').value;
+      const leaveDate = document.getElementById('leaveDate').value;
+      const reason = document.getElementById('reason').value;
+
+      // Add leave request to the list
+      leaveRequests.push({
+        id: employeeId,
+        name: "Simulated Employee", // Replace with actual employee name
+        leaveDate,
+        reason,
+        status: "Pending"
+      });
+
+      // Reload leave requests
+      loadLeaveRequests();
+
+      // Show notification
+      showNotification('Leave request submitted successfully!');
+    });
+
+    // Function to approve leave
+    function approveLeave(employeeId, leaveDate) {
+      const request = leaveRequests.find(req => req.id === employeeId && req.leaveDate === leaveDate);
+      if (request && request.status === "Pending") {
+        request.status = "Approved";
+        loadLeaveRequests();
+        showNotification(`Leave approved for ${employeeId} on ${leaveDate}`);
+      }
+    }
+
+    // Function to reject leave
+    function rejectLeave(employeeId, leaveDate) {
+      const request = leaveRequests.find(req => req.id === employeeId && req.leaveDate === leaveDate);
+      if (request && request.status === "Pending") {
+        request.status = "Rejected";
+        loadLeaveRequests();
+        showNotification(`Leave rejected for ${employeeId} on ${leaveDate}`);
+      }
+    }
+
+    // Function to auto-mark absent employees
+    function autoMarkAbsent() {
+      // Simulate auto-marking absent employees
+      const today = new Date().toISOString().split('T')[0];
+      absentEmployees.push({
+        id: "EMP999",
+        name: "Simulated Employee",
+        date: today,
+        status: "Absent"
+      });
+      loadAbsentEmployees();
+      showNotification('Absent employees marked for the day.');
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    // Load initial data
+    loadLeaveRequests();
+    loadAbsentEmployees();
+
+    // Simulate auto-marking absent at the end of the day
+    setTimeout(autoMarkAbsent, 5000); // Simulate after 5 seconds
+  </script>
+</body>
+</html>

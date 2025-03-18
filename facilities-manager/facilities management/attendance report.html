@@ -3,27 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance Reports</title>
+  <title>Reports & Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       background-color: #f8f9fa;
       height: 100vh;
-      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden; /* Only overflow-x: hidden */
+      display: flex;
+      flex-direction: column;
     }
     .header {
       background: linear-gradient(135deg, #6a11cb, #2575fc);
       color: white;
       padding: 20px 0;
+      text-align: center;
       margin-top: 56px; /* Adjusted for fixed navbar */
-    }
-    .reports-section {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-bottom: 30px;
     }
     .navbar {
       background: linear-gradient(135deg, #6a11cb, #2575fc);
@@ -39,11 +37,77 @@
     .nav-link:hover {
       color: #f1f1f1 !important;
     }
-    .filter-section {
-      margin-bottom: 20px;
+    .report-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px;
+      width: 90%; /* Percentage-based width */
+      flex-direction: row;
     }
-    .filter-section .form-control {
-      margin-right: 10px;
+    .btn-action {
+      font-size: 1rem;
+      margin-top: 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .btn-generate {
+      background: #6a11cb;
+      color: white;
+    }
+    .btn-export {
+      background: #28a745;
+      color: white;
+    }
+    .btn-export:hover {
+      background: #218838;
+    }
+    .report-history {
+      margin-top: 20px;
+      overflow-x: auto; /* Allow horizontal scrolling for tables */
+      width: 100%; /* Full width */
+    }
+    .report-history table {
+      width: 100%; /* Full width */
+      border-collapse: collapse;
+    }
+    .report-history th, .report-history td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .report-history th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
+    .align-items-center {
+      display: flex;
+      align-items: center; /* Align items vertically */
+    }
+    .form-control, .btn-generate {
+      height: 38px; /* Ensure same height for dropdown and button */
     }
   </style>
 </head>
@@ -70,7 +134,7 @@
             <a class="nav-link" href="#">Warnings & Notices</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="#">Attendance Reports</a>
+            <a class="nav-link active" href="#">Reports & Dashboard</a>
           </li>
         </ul>
       </div>
@@ -78,240 +142,220 @@
   </nav>
 
   <!-- Header -->
-  <div class="header text-center">
-    <h1 class="display-4">Attendance Reports</h1>
-    <p class="lead">Generate and export attendance reports for payroll processing.</p>
+  <div class="header">
+    <h1 class="display-4">Reports & Dashboard</h1>
+    <p class="lead">Generate and manage attendance reports.</p>
   </div>
 
-  <!-- Reports Section -->
-  <div class="container-fluid h-100">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="reports-section">
-          <h3>Monthly Attendance Report</h3>
+  <!-- Main Content -->
+  <div class="center-content">
+    <!-- Generate Report Section -->
+    <div class="report-section">
+      <h3 class="text-center">Generate Report</h3>
+      <div class="row align-items-center"> <!-- Added align-items-center class -->
+        <div class="col-md-6">
+          <label for="timePeriod" class="form-label">Select Time Period</label>
+          <select id="timePeriod" class="form-control">
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <button class="btn btn-generate w-100" onclick="generateReport()">
+            <i class="fas fa-chart-line"></i> Generate Report
+          </button>
+        </div>
+      </div>
+    </div>
 
-          <!-- Filters -->
-          <div class="filter-section">
-            <div class="row">
-              <div class="col-md-3">
-                <label for="siteFilter" class="form-label">Site</label>
-                <select class="form-control" id="siteFilter">
-                  <option value="All">All Sites</option>
-                  <option value="Site A">Site A</option>
-                  <option value="Site B">Site B</option>
-                  <option value="Site C">Site C</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="dayFilter" class="form-label">Day</label>
-                <select class="form-control" id="dayFilter">
-                  <option value="All">All Days</option>
-                  <option value="Monday">Monday</option>
-                  <option value="Tuesday">Tuesday</option>
-                  <option value="Wednesday">Wednesday</option>
-                  <option value="Thursday">Thursday</option>
-                  <option value="Friday">Friday</option>
-                  <option value="Saturday">Saturday</option>
-                  <option value="Sunday">Sunday</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="weekFilter" class="form-label">Week</label>
-                <select class="form-control" id="weekFilter">
-                  <option value="All">All Weeks</option>
-                  <option value="Week 1">Week 1</option>
-                  <option value="Week 2">Week 2</option>
-                  <option value="Week 3">Week 3</option>
-                  <option value="Week 4">Week 4</option>
-                </select>
-              </div>
-              <div class="col-md-3">
-                <label for="monthFilter" class="form-label">Month</label>
-                <select class="form-control" id="monthFilter">
-                  <option value="All">All Months</option>
-                  <option value="January">January</option>
-                  <option value="February">February</option>
-                  <option value="March">March</option>
-                  <option value="April">April</option>
-                  <option value="May">May</option>
-                  <option value="June">June</option>
-                  <option value="July">July</option>
-                  <option value="August">August</option>
-                  <option value="September">September</option>
-                  <option value="October">October</option>
-                  <option value="November">November</option>
-                  <option value="December">December</option>
-                </select>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-md-6">
-                <label for="customDateRange" class="form-label">Custom Date Range</label>
-                <input type="text" class="form-control" id="customDateRange" placeholder="Select Date Range">
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-primary w-100 mt-4" id="applyFiltersBtn">
-                  <i class="fas fa-filter"></i> Apply Filters
-                </button>
-              </div>
-              <div class="col-md-3">
-                <button class="btn btn-secondary w-100 mt-4" id="resetFiltersBtn">
-                  <i class="fas fa-sync"></i> Reset Filters
-                </button>
-              </div>
-            </div>
-          </div>
+    <!-- Report Data Section -->
+    <div class="report-section">
+      <h3 class="text-center">Report Data</h3>
+      <div class="report-history">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Date</th>
+              <th>Punch In Time</th>
+              <th>Punch Out Time</th>
+              <th>Total Hours</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="reportDataBody">
+            <!-- Report data will be populated here -->
+          </tbody>
+        </table>
+      </div>
+      <div class="text-center mt-3">
+        <button class="btn btn-export" onclick="exportToExcel()">
+          <i class="fas fa-file-excel"></i> Export to Excel
+        </button>
+        <button class="btn btn-export" onclick="exportToPDF()">
+          <i class="fas fa-file-pdf"></i> Export to PDF
+        </button>
+      </div>
+    </div>
 
-          <!-- Export Buttons -->
-          <div class="mt-4">
-            <button class="btn btn-primary">
-              <i class="fas fa-download"></i> Export as Excel
-            </button>
-            <button class="btn btn-primary">
-              <i class="fas fa-download"></i> Export as PDF
-            </button>
-          </div>
-
-          <!-- Attendance Report Table -->
-          <table class="table table-hover mt-4">
-            <thead>
-              <tr>
-                <th>Employee</th>
-                <th>Site</th>
-                <th>Date</th>
-                <th>Present</th>
-                <th>Late</th>
-                <th>Absent</th>
-                <th>Leave</th>
-              </tr>
-            </thead>
-            <tbody id="attendanceTableBody">
-              <!-- Attendance data will be populated here -->
-            </tbody>
-          </table>
+    <!-- Calculate Total Hours Section -->
+    <div class="report-section">
+      <h3 class="text-center">Calculate Total Hours</h3>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="employeeId" class="form-label">Employee ID</label>
+          <input type="text" class="form-control" id="employeeId" required>
+        </div>
+        <div class="col-md-6">
+          <label for="date" class="form-label">Date</label>
+          <input type="date" class="form-control" id="date" required>
+        </div>
+        <div class="col-md-12 text-center mt-3">
+          <button class="btn btn-generate w-100" onclick="calculateTotalHours()">
+            <i class="fas fa-calculator"></i> Calculate Total Hours
+          </button>
+        </div>
+        <div class="col-md-12 text-center mt-3">
+          <p id="totalHoursResult" class="text-muted"></p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Date Range Picker -->
-  <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css">
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    Action Successful!
+  </div>
+
+  <!-- Scripts -->
   <script>
-    // Sample Attendance Data
-    const attendanceData = [
-      { employee: "John Doe", site: "Site A", date: "2023-10-01", present: 1, late: 0, absent: 0, leave: 0 },
-      { employee: "Jane Smith", site: "Site B", date: "2023-10-01", present: 1, late: 1, absent: 0, leave: 0 },
-      { employee: "Alice Johnson", site: "Site C", date: "2023-10-02", present: 1, late: 0, absent: 0, leave: 0 },
-      { employee: "John Doe", site: "Site A", date: "2023-10-03", present: 0, late: 0, absent: 1, leave: 0 },
-      { employee: "Jane Smith", site: "Site B", date: "2023-10-03", present: 1, late: 0, absent: 0, leave: 0 },
-      { employee: "Alice Johnson", site: "Site C", date: "2023-10-04", present: 1, late: 0, absent: 0, leave: 0 },
+    // Simulated report data
+    let reportData = [
+      {
+        id: "EMP123",
+        name: "John Doe",
+        date: "2023-10-25",
+        punchIn: "09:00 AM",
+        punchOut: "05:00 PM",
+        totalHours: "8h 0m",
+        status: "Present"
+      },
+      {
+        id: "EMP456",
+        name: "Jane Smith",
+        date: "2023-10-25",
+        punchIn: "09:15 AM",
+        punchOut: "05:30 PM",
+        totalHours: "8h 15m",
+        status: "Late"
+      },
+      {
+        id: "EMP789",
+        name: "Alice Johnson",
+        date: "2023-10-25",
+        punchIn: "-",
+        punchOut: "-",
+        totalHours: "-",
+        status: "Absent"
+      }
     ];
 
-    const attendanceTableBody = document.getElementById('attendanceTableBody');
-
-    // Render Attendance Table
-    function renderAttendanceTable(data) {
-      attendanceTableBody.innerHTML = data.map(entry => `
+    // Function to load report data
+    function loadReportData() {
+      const reportDataBody = document.getElementById('reportDataBody');
+      reportDataBody.innerHTML = reportData.map(entry => `
         <tr>
-          <td>${entry.employee}</td>
-          <td>${entry.site}</td>
+          <td>${entry.id}</td>
+          <td>${entry.name}</td>
           <td>${entry.date}</td>
-          <td>${entry.present}</td>
-          <td>${entry.late}</td>
-          <td>${entry.absent}</td>
-          <td>${entry.leave}</td>
+          <td>${entry.punchIn}</td>
+          <td>${entry.punchOut}</td>
+          <td>${entry.totalHours}</td>
+          <td>${entry.status}</td>
         </tr>
       `).join('');
     }
 
-    // Apply Filters
-    document.getElementById('applyFiltersBtn').addEventListener('click', () => {
-      const siteFilter = document.getElementById('siteFilter').value;
-      const dayFilter = document.getElementById('dayFilter').value;
-      const weekFilter = document.getElementById('weekFilter').value;
-      const monthFilter = document.getElementById('monthFilter').value;
-      const customDateRange = document.getElementById('customDateRange').value;
+    // Function to generate report
+    function generateReport() {
+      const timePeriod = document.getElementById('timePeriod').value;
+      let filteredData = reportData;
 
-      let filteredData = attendanceData;
-
-      // Site Filter
-      if (siteFilter !== "All") {
-        filteredData = filteredData.filter(entry => entry.site === siteFilter);
-      }
-
-      // Day Filter
-      if (dayFilter !== "All") {
-        filteredData = filteredData.filter(entry => {
-          const date = new Date(entry.date);
-          const day = date.toLocaleString('en-US', { weekday: 'long' });
-          return day === dayFilter;
-        });
-      }
-
-      // Week Filter
-      if (weekFilter !== "All") {
-        filteredData = filteredData.filter(entry => {
-          const date = new Date(entry.date);
-          const week = Math.ceil(date.getDate() / 7);
-          return `Week ${week}` === weekFilter;
-        });
-      }
-
-      // Month Filter
-      if (monthFilter !== "All") {
-        filteredData = filteredData.filter(entry => {
-          const date = new Date(entry.date);
-          const month = date.toLocaleString('en-US', { month: 'long' });
-          return month === monthFilter;
-        });
-      }
-
-      // Custom Date Range Filter
-      if (customDateRange) {
-        const [startDate, endDate] = customDateRange.split(" - ");
-        filteredData = filteredData.filter(entry => {
+      if (timePeriod === "weekly") {
+        // Simulate weekly report (last 7 days)
+        filteredData = reportData.filter(entry => {
           const entryDate = new Date(entry.date);
-          return entryDate >= new Date(startDate) && entryDate <= new Date(endDate);
+          const today = new Date();
+          const diffTime = Math.abs(today - entryDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays <= 7;
+        });
+      } else if (timePeriod === "monthly") {
+        // Simulate monthly report (last 30 days)
+        filteredData = reportData.filter(entry => {
+          const entryDate = new Date(entry.date);
+          const today = new Date();
+          const diffTime = Math.abs(today - entryDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays <= 30;
         });
       }
 
-      renderAttendanceTable(filteredData);
-    });
+      // Update report data
+      const reportDataBody = document.getElementById('reportDataBody');
+      reportDataBody.innerHTML = filteredData.map(entry => `
+        <tr>
+          <td>${entry.id}</td>
+          <td>${entry.name}</td>
+          <td>${entry.date}</td>
+          <td>${entry.punchIn}</td>
+          <td>${entry.punchOut}</td>
+          <td>${entry.totalHours}</td>
+          <td>${entry.status}</td>
+        </tr>
+      `).join('');
 
-    // Reset Filters
-    document.getElementById('resetFiltersBtn').addEventListener('click', () => {
-      document.getElementById('siteFilter').value = "All";
-      document.getElementById('dayFilter').value = "All";
-      document.getElementById('weekFilter').value = "All";
-      document.getElementById('monthFilter').value = "All";
-      document.getElementById('customDateRange').value = "";
-      renderAttendanceTable(attendanceData);
-    });
+      showNotification(`${timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)} report generated successfully!`);
+    }
 
-    // Initialize Date Range Picker
-    $(document).ready(function() {
-      $('#customDateRange').daterangepicker({
-        opens: 'left',
-        autoUpdateInput: false,
-        locale: {
-          cancelLabel: 'Clear'
-        }
-      });
+    // Function to calculate total hours
+    function calculateTotalHours() {
+      const employeeId = document.getElementById('employeeId').value;
+      const date = document.getElementById('date').value;
 
-      $('#customDateRange').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-      });
+      const entry = reportData.find(entry => entry.id === employeeId && entry.date === date);
+      if (entry) {
+        document.getElementById('totalHoursResult').textContent = `Total Hours: ${entry.totalHours}`;
+      } else {
+        document.getElementById('totalHoursResult').textContent = "No data found for the given employee and date.";
+      }
+    }
 
-      $('#customDateRange').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val('');
-      });
-    });
+    // Function to export to Excel
+    function exportToExcel() {
+      showNotification('Exporting report to Excel...');
+      // Implement Excel export logic here
+    }
 
-    // Initial Render
-    renderAttendanceTable(attendanceData);
+    // Function to export to PDF
+    function exportToPDF() {
+      showNotification('Exporting report to PDF...');
+      // Implement PDF export logic here
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    // Load initial data
+    loadReportData();
   </script>
 </body>
 </html>

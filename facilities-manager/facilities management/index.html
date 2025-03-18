@@ -17,7 +17,8 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Agency Dashboard</a>
+            <img src="Intelliflow.png" alt="inteli flow logo" width="70" height="45">
+            <a class="navbar-brand" style="font-family: 'Arial', sans-serif;" href="#"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -46,9 +47,11 @@
                             <li><a class="dropdown-item" href="attendance report.html">Attendance Reports</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#">💰 Payroll</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">📊 Reports</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">⚙️ Settings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Payroll</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -147,25 +150,25 @@
             </div>
         </div>
 
-        <!-- Charts -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card p-3 h-100">
-                    <h5>Revenue Trends</h5>
-                    <div class="chart-container">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card p-3 h-100">
-                    <h5>Employee Distribution by Site (Today)</h5>
-                    <div class="chart-container">
-                        <canvas id="siteChart"></canvas>
-                    </div>
-                </div>
+        <!-- Charts Section -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card p-3 h-100">
+            <h5>Revenue Trends</h5>
+            <div class="chart-container">
+                <canvas id="revenueChart" width="400" height="400"></canvas>
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3 h-100">
+            <h5>Employee Distribution by Site (Today)</h5>
+            <div class="chart-container">
+                <canvas id="siteChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 
     <!-- Scripts -->
