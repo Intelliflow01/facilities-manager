@@ -16,7 +16,7 @@
       background: linear-gradient(135deg, #6a11cb, #2575fc);
       color: white;
       padding: 20px 0;
-      margin-top: 56px; /* Adjusted for fixed navbar */
+      margin-top: 0; /* Adjusted for fixed navbar */
     }
     .drag-drop-section {
       background: white;
@@ -69,13 +69,15 @@
     .navbar {
       background: linear-gradient(135deg, #6a11cb, #2575fc);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      position: fixed;
+      position: relative;
       top: 0;
       width: 100%;
       z-index: 1000;
     }
     .navbar-brand, .nav-link {
       color: white !important;
+      font-size: 1.1rem;
+      padding-top: 15px;
     }
     .nav-link:hover {
       color: #f1f1f1 !important;
@@ -105,7 +107,7 @@
                 <li class="nav-item"><a class="nav-link" href="../dashbaord/index.html">Home</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Employee 
+                        Employee Management
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
                         <li><a class="dropdown-item" href="../Employee/employee profile.html">Employee Prifile</a></li>
@@ -113,7 +115,8 @@
                         <li><a class="dropdown-item" href="../Employee/assign emp.html">Assign Employees</a></li>
                         <li><a class="dropdown-item" href="../Employee/employee warnings.html">Employee Warnings</a></li>
                         <li><a class="dropdown-item" href="../Employee/performance report.html">Performance</a></li>
-                        <li><a class="dropdown-item" href="../Employee/against employee.html">Employee Complaints</a></li>
+                        <li><a class="dropdown-item" href="../Employee/Complaints Against Clients.html">Employee Complaints</a></li>
+                        <li><a class="dropdown-item" href="../Employee/employee roaster.html">Employee Roaster</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -123,7 +126,7 @@
                     <ul class="dropdown-menu" aria-labelledby="attendanceDropdown">
                         <li><a class="dropdown-item" href="../Attendance/attendance dashbaord.html">Attendance Dashboard</a></li>
                         <li><a class="dropdown-item" href="../Attendance/mark attendance.html">Attendance Marking</a></li>
-                        <li><a class="dropdown-item" href="../Attendance/correction request.html">Attendance Correction Request</a></li>
+                        <li><a class="dropdown-item" href="../Attendance/attendance correction request.html">Correction Request</a></li>
                         <li><a class="dropdown-item" href="../Attendance/Leave and Absent.html">leave & Absent</a></li>
                         <li><a class="dropdown-item" href="../Attendance/attendance report.html">Attendance Reports</a></li>
                     </ul>
@@ -142,10 +145,10 @@
                     <a class="nav-link dropdown-toggle" href="#" id="ClientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Client
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="ClientDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="ClientDropdown">
                         <li><a class="dropdown-item" href="../Client/client profile.html">Client profile</a></li>
                         <li><a class="dropdown-item" href="../Client/clients documents.html">Client Documents</a></li>
-                        <li><a class="dropdown-item" href="../Client/client assigned employees.html">Client Assigned Employees</a></li>
+                        <li><a class="dropdown-item" href="../Client/client assigned employees.html">Assigned Employees</a></li>
                         <li><a class="dropdown-item" href="../Client/client payment tracking.html">Client Payment</a></li>
                         <li><a class="dropdown-item" href="../Client/Complaints Against Employees.html">Employee Complain</a></li>
                     </ul>
@@ -154,7 +157,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="SettingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Setting
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="SettingsDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="SettingsDropdown">
                         <li><a class="dropdown-item" href="../settings/master.html">Master Settings</a></li>
                         <li><a class="dropdown-item" href="../settings/Support.html">Support</a></li>
                         <li><a class="dropdown-item" href="payroll setting.html">Logout</a></li>
@@ -163,7 +166,7 @@
             </ul>
         </div>
     </div>
-  </nav>
+</nav>
 
   <!-- Header -->
   <div class="header text-center">
