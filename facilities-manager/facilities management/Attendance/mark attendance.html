@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Attendance</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .marking-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin: 20px auto;
+      width: 90%;
+    }
+    .btn-punch {
+      font-size: 1.2rem;
+      padding: 15px;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 300px; /* Limit button width for better centering */
+    }
+    .btn-punch i {
+      margin-right: 10px;
+    }
+    .attendance-history {
+      margin-top: 20px;
+      overflow-x: auto;
+      flex-grow: 1;
+      width: 100%;
+    }
+    .attendance-history table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .attendance-history th, .attendance-history td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .attendance-history th {
+      background-color: #6a11cb;
+      color: white;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+    }
+    .full-width {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Attendance Marking</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header">
+    <h1 class="display-4">Attendance Marking System</h1>
+    <p class="lead">Mark your attendance with ease.</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="center-content">
+    <!-- Punch In/Out Card -->
+    <div class="marking-section full-width">
+      <h3 class="text-center">Mark Attendance</h3>
+      <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+          <!-- Punch In Button -->
+          <button class="btn btn-success btn-punch" id="punchInBtn">
+            <i class="fas fa-sign-in-alt"></i> Punch In
+          </button>
+          <p id="punchInTime" class="text-muted text-center mt-2"></p>
+          <p id="punchInLocation" class="text-muted text-center"></p>
+
+          <!-- Punch Out Button -->
+          <button class="btn btn-danger btn-punch" id="punchOutBtn" disabled>
+            <i class="fas fa-sign-out-alt"></i> Punch Out
+          </button>
+          <p id="punchOutTime" class="text-muted text-center mt-2"></p>
+          <p id="punchOutLocation" class="text-muted text-center"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance History -->
+    <div class="marking-section attendance-history full-width">
+      <h3>Attendance History</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Employee Name</th>
+            <th>Role</th>
+            <th>Site</th>
+            <th>Punch In Time</th>
+            <th>Punch Out Time</th>
+            <th>Total Work Hours</th>
+            <th>Location</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceHistoryBody">
+          <!-- Attendance history will be populated here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    Punch In/Out Successful!
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Simulated employee data
+    const employee = {
+      id: "EMP123",
+      name: "John Doe",
+      role: "Developer",
+      site: "New York Office"
+    };
+
+    // Function to get current time
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString();
+    }
+
+    // Function to get current location
+    function getCurrentLocation(callback) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            getLocationName(latitude, longitude, callback);
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+            callback("Location not available");
+          }
+        );
+      } else {
+        callback("Location not supported");
+      }
+    }
+
+    // Function to get location name using Nominatim API
+    function getLocationName(latitude, longitude, callback) {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+
+      fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.display_name) {
+            callback(data.display_name); // Full address
+          } else {
+            callback("Location name not found");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching location name:", error);
+          callback("Location name not available");
+        });
+    }
+
+    // Function to calculate total hours
+    function calculateTotalHours(punchInTime, punchOutTime) {
+      const punchInDate = new Date(`01/01/2000 ${punchInTime}`);
+      const punchOutDate = new Date(`01/01/2000 ${punchOutTime}`);
+      const diffMs = punchOutDate - punchInDate; // Difference in milliseconds
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60)); // Convert to hours
+      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60)); // Remaining minutes
+      return `${diffHours}h ${diffMinutes}m`;
+    }
+
+    // Punch In Button
+    document.getElementById('punchInBtn').addEventListener('click', () => {
+      const punchInTime = getCurrentTime();
+      getCurrentLocation((location) => {
+        document.getElementById('punchInTime').textContent = `Punch In Time: ${punchInTime}`;
+        document.getElementById('punchInLocation').textContent = `Location: ${location}`;
+
+        // Disable Punch In and enable Punch Out
+        document.getElementById('punchInBtn').disabled = true;
+        document.getElementById('punchOutBtn').disabled = false;
+
+        // Add to attendance history
+        const historyRow = `
+          <tr>
+            <td>${employee.id}</td>
+            <td>${employee.name}</td>
+            <td>${employee.role}</td>
+            <td>${employee.site}</td>
+            <td>${punchInTime}</td>
+            <td>-</td>
+            <td>-</td>
+            <td>${location}</td>
+          </tr>
+        `;
+        document.getElementById('attendanceHistoryBody').insertAdjacentHTML('afterbegin', historyRow);
+
+        // Show notification
+        showNotification('Punch In Successful!');
+      });
+    });
+
+    // Punch Out Button
+    document.getElementById('punchOutBtn').addEventListener('click', () => {
+      const punchOutTime = getCurrentTime();
+      getCurrentLocation((location) => {
+        document.getElementById('punchOutTime').textContent = `Punch Out Time: ${punchOutTime}`;
+        document.getElementById('punchOutLocation').textContent = `Location: ${location}`;
+
+        // Disable Punch Out and enable Punch In
+        document.getElementById('punchOutBtn').disabled = true;
+        document.getElementById('punchInBtn').disabled = false;
+
+        // Update the latest attendance history row
+        const historyRow = document.querySelector('#attendanceHistoryBody tr');
+        if (historyRow) {
+          historyRow.cells[5].textContent = punchOutTime;
+
+          // Calculate total hours
+          const punchInTime = historyRow.cells[4].textContent;
+          const totalHours = calculateTotalHours(punchInTime, punchOutTime);
+          historyRow.cells[6].textContent = totalHours;
+        }
+
+        // Show notification
+        showNotification('Punch Out Successful!');
+      });
+    });
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.style.display = 'block';
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

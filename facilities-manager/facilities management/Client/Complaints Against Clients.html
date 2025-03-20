@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Complaints Against Clients</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .complaints-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .btn-escalate-complaint {
+      background: #6a11cb;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .btn-escalate-complaint:hover {
+      background: #5a0bb5;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">HRMS</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Directory</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Employee Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Assign Employees</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Warnings & Notices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Employee Complaints</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Employee Complaints Against Clients</h1>
+    <p class="lead">Review and escalate employee complaints against clients.</p>
+  </div>
+
+  <!-- Complaints Section -->
+  <div class="container-fluid h-100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="complaints-section">
+          <h3>Complaints</h3>
+          <button class="btn btn-escalate-complaint" data-bs-toggle="modal" data-bs-target="#escalateComplaintModal">
+            <i class="fas fa-exclamation-triangle"></i> Escalate Complaint
+          </button>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Client</th>
+                <th>Complaint Type</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="employeeComplaintsTableBody">
+              <!-- Employee complaints data will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Escalate Complaint Modal -->
+  <div class="modal fade" id="escalateComplaintModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Escalate Complaint</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="escalateComplaintForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="employeeName" class="form-label">Employee Name</label>
+                <select class="form-control" id="employeeName" required>
+                  <option value="John Doe">John Doe</option>
+                  <option value="Jane Smith">Jane Smith</option>
+                  <option value="Alice Johnson">Alice Johnson</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="clientName" class="form-label">Client Name</label>
+                <select class="form-control" id="clientName" required>
+                  <option value="Client A">Client A</option>
+                  <option value="Client B">Client B</option>
+                  <option value="Client C">Client C</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="complaintType" class="form-label">Complaint Type</label>
+                <select class="form-control" id="complaintType" required>
+                  <option value="Payment Delays">Payment Delays</option>
+                  <option value="Harassment">Harassment</option>
+                  <option value="Safety Issues">Safety Issues</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="complaintStatus" class="form-label">Status</label>
+                <select class="form-control" id="complaintStatus" required>
+                  <option value="Open">Open</option>
+                  <option value="Escalated">Escalated</option>
+                  <option value="Closed">Closed</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="escalateComplaintForm" class="btn btn-primary">Escalate Complaint</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const employeeComplaints = [
+      {
+        employee: "John Doe",
+        client: "Client A",
+        complaintType: "Payment Delays",
+        status: "Open"
+      },
+      {
+        employee: "Jane Smith",
+        client: "Client B",
+        complaintType: "Harassment",
+        status: "Open"
+      },
+      {
+        employee: "Alice Johnson",
+        client: "Client C",
+        complaintType: "Safety Issues",
+        status: "Open"
+      }
+    ];
+
+    const employeeComplaintsTableBody = document.getElementById('employeeComplaintsTableBody');
+
+    function renderEmployeeComplaintsTable() {
+      employeeComplaintsTableBody.innerHTML = employeeComplaints.map(complaint => `
+        <tr>
+          <td>${complaint.employee}</td>
+          <td>${complaint.client}</td>
+          <td>${complaint.complaintType}</td>
+          <td>${complaint.status}</td>
+          <td>
+            <button class="btn btn-primary btn-sm">
+              <i class="fas fa-arrow-up"></i> Escalate
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('escalateComplaintForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newComplaint = {
+        employee: document.getElementById('employeeName').value,
+        client: document.getElementById('clientName').value,
+        complaintType: document.getElementById('complaintType').value,
+        status: document.getElementById('complaintStatus').value
+      };
+      employeeComplaints.push(newComplaint);
+      renderEmployeeComplaintsTable();
+      document.getElementById('escalateComplaintForm').reset();
+      bootstrap.Modal.getInstance(document.getElementById('escalateComplaintModal')).hide();
+    });
+
+    // Initial rendering of the table
+    renderEmployeeComplaintsTable();
+  </script>
+</body>
+</html>

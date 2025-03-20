@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Documents</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 20px 0;
+      margin-top: 56px; /* Adjusted for fixed navbar */
+    }
+    .documents-section {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+    .navbar {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .navbar-brand, .nav-link {
+      color: white !important;
+    }
+    .nav-link:hover {
+      color: #f1f1f1 !important;
+    }
+    .btn-generate-document {
+      background: #6a11cb;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
+    }
+    .btn-generate-document:hover {
+      background: #5a0bb5;
+    }
+    .btn-preview {
+      background: #28a745;
+      color: white;
+    }
+    .btn-preview:hover {
+      background: #218838;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      display: none;
+    }
+    .center-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 20px;
+      width: 100%; /* Full width */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <img src="Inteliflow.png" alt="inteli flow logo" width="70" height="45">
+        <a class="navbar-brand" style="font-family: 'Arial', sans-serif;" href="#"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="employeeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Employee Management
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
+                        <li><a class="dropdown-item" href="employee shift.html">Employee Shift</a></li>
+                        <li><a class="dropdown-item" href="employee profile.html">Employee Profile</a></li>
+                        <li><a class="dropdown-item" href="assisgn employee.html">Assign Employees</a></li>
+                        <li><a class="dropdown-item" href="employee warnings.html">Employee Warnings</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="attendanceDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Attendance
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="attendanceDropdown">
+                        <li><a class="dropdown-item" href="attendance dashbaord.html">Attendance Dashboard</a></li>
+                        <li><a class="dropdown-item" href="mark attendance.html">Attendance Marking</a></li>
+                        <li><a class="dropdown-item" href="attendance correction request.html">Attendance Correction Request</a></li>
+                        <li><a class="dropdown-item" href="attendance report.html">Attendance Reports</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Payroll</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+  <!-- Header -->
+  <div class="header text-center">
+    <h1 class="display-4">Client Documents</h1>
+    <p class="lead">Create and manage personalized client documents.</p>
+  </div>
+
+  <!-- Documents Section -->
+  <div class="container-fluid h-100">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="documents-section">
+          <h3>Generate Documents</h3>
+          <div class="row">
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#quotationModal">
+                <i class="fas fa-file-alt"></i> Create Quotation
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#reminderModal">
+                <i class="fas fa-bell"></i> Create Reminder
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#contractModal">
+                <i class="fas fa-file-contract"></i> Create Contract
+              </button>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#invoiceModal">
+                <i class="fas fa-file-invoice"></i> Generate Invoice
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button class="btn btn-generate-document w-100" data-bs-toggle="modal" data-bs-target="#receiptModal">
+                <i class="fas fa-receipt"></i> Generate Payment Receipt
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quotation Modal -->
+  <div class="modal fade" id="quotationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Quotation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="quotationForm">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="quotationClient" class="form-label">Client Name</label>
+                <select class="form-control" id="quotationClient" required>
+                  <option value="Client A">Client A</option>
+                  <option value="Client B">Client B</option>
+                  <option value="Client C">Client C</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="quotationDate" class="form-label">Date</label>
+                <input type="date" class="form-control" id="quotationDate" required>
+              </div>
+              <div class="col-md-12">
+                <label for="quotationTemplate" class="form-label">Quotation Template (HTML)</label>
+                <textarea class="form-control" id="quotationTemplate" rows="10" required>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 80%; margin: auto; padding: 20px; border: 1px solid #000; }
+        .header, .customer-info, .terms { margin-bottom: 20px; }
+        .header h2 { text-align: right; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+        .right { text-align: right; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>QUOTE</h2>
+            <p>Date: <span id="quoteDate">{{quote_date}}</span></p>
+            <p>Quote #: <span id="quoteNumber">{{quote_number}}</span></p>
+            <p>Customer ID: <span id="customerID">{{customer_id}}</span></p>
+            <p>Valid Until: <span id="validUntil">{{valid_until}}</span></p>
+        </div>
+        
+        <div class="customer-info">
+            <h3>Customer</h3>
+            <p>Name: {{customer_name}}</p>
+            <p>Company: {{company_name}}</p>
+            <p>Address: {{customer_address}}</p>
+            <p>Phone: {{customer_phone}}</p>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>Taxed</th>
+                <th>Amount</th>
+            </tr>
+            <tr>
+                <td>Service Fee</td>
+                <td>No</td>
+                <td>${{service_fee}}</td>
+            </tr>
+            <tr>
+                <td>Labor ({{labor_hours}} hours at ${{labor_rate}}/hr)</td>
+                <td>No</td>
+                <td>${{labor_cost}}</td>
+            </tr>
+            <tr>
+                <td>Parts</td>
+                <td>Yes</td>
+                <td>${{parts_cost}}</td>
+            </tr>
+            <tr>
+                <td>New client discount</td>
+                <td>No</td>
+                <td>${{discount}}</td>
+            </tr>
+        </table>
+        
+        <div class="right">
+            <p>Subtotal: ${{subtotal}}</p>
+            <p>Taxable: ${{taxable_amount}}</p>
+            <p>Tax Rate: {{tax_rate}}%</p>
+            <p>Tax Due: ${{tax_due}}</p>
+            <h3>Total Due: ${{total_due}}</h3>
+        </div>
+        
+        <div class="terms">
+            <h3>Terms and Conditions</h3>
+            <p>1. Customer will be billed after acceptance of this quote.</p>
+            <p>2. Payment is due before delivery of service and goods.</p>
+            <p>3. Please sign and return the quote to proceed.</p>
+            <p><strong>Customer Acceptance (sign below):</strong></p>
+            <p>_________________________</p>
+        </div>
+    </div>
+</body>
+</html>
+                </textarea>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="quotationForm" class="btn btn-primary">Generate Quotation</button>
+          <button class="btn btn-preview" onclick="previewQuotation()">
+            <i class="fas fa-eye"></i> Preview
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Sample data for clients
+    const clients = [
+      {
+        name: "Client A",
+        company_name: "Company A",
+        customer_address: "123 Main St, City A",
+        customer_phone: "+1234567890",
+        service_fee: 100,
+        labor_hours: 5,
+        labor_rate: 20,
+        parts_cost: 50,
+        discount: 10,
+        subtotal: 240,
+        taxable_amount: 50,
+        tax_rate: 10,
+        tax_due: 5,
+        total_due: 245
+      },
+      {
+        name: "Client B",
+        company_name: "Company B",
+        customer_address: "456 Elm St, City B",
+        customer_phone: "+0987654321",
+        service_fee: 150,
+        labor_hours: 10,
+        labor_rate: 25,
+        parts_cost: 75,
+        discount: 15,
+        subtotal: 460,
+        taxable_amount: 75,
+        tax_rate: 10,
+        tax_due: 7.5,
+        total_due: 467.5
+      },
+      {
+        name: "Client C",
+        company_name: "Company C",
+        customer_address: "789 Oak St, City C",
+        customer_phone: "+1122334455",
+        service_fee: 200,
+        labor_hours: 8,
+        labor_rate: 30,
+        parts_cost: 100,
+        discount: 20,
+        subtotal: 500,
+        taxable_amount: 100,
+        tax_rate: 10,
+        tax_due: 10,
+        total_due: 510
+      }
+    ];
+
+    // Function to preview Quotation
+    function previewQuotation() {
+      const clientName = document.getElementById('quotationClient').value;
+      const date = document.getElementById('quotationDate').value;
+      const client = clients.find(c => c.name === clientName);
+
+      if (client) {
+        const template = document.getElementById('quotationTemplate').value;
+        const quoteNumber = Math.floor(Math.random() * 1000); // Random quote number
+        const validUntil = new Date(new Date(date).setDate(new Date(date).getDate() + 30)).toISOString().split('T')[0]; // Valid for 30 days
+
+        let previewContent = template
+          .replace(/{{quote_date}}/g, date)
+          .replace(/{{quote_number}}/g, quoteNumber)
+          .replace(/{{customer_id}}/g, clientName)
+          .replace(/{{valid_until}}/g, validUntil)
+          .replace(/{{customer_name}}/g, client.name)
+          .replace(/{{company_name}}/g, client.company_name)
+          .replace(/{{customer_address}}/g, client.customer_address)
+          .replace(/{{customer_phone}}/g, client.customer_phone)
+          .replace(/{{service_fee}}/g, client.service_fee)
+          .replace(/{{labor_hours}}/g, client.labor_hours)
+          .replace(/{{labor_rate}}/g, client.labor_rate)
+          .replace(/{{labor_cost}}/g, client.labor_hours * client.labor_rate)
+          .replace(/{{parts_cost}}/g, client.parts_cost)
+          .replace(/{{discount}}/g, client.discount)
+          .replace(/{{subtotal}}/g, client.subtotal)
+          .replace(/{{taxable_amount}}/g, client.taxable_amount)
+          .replace(/{{tax_rate}}/g, client.tax_rate)
+          .replace(/{{tax_due}}/g, client.tax_due)
+          .replace(/{{total_due}}/g, client.total_due);
+
+        const previewWindow = window.open();
+        previewWindow.document.write(previewContent);
+        previewWindow.document.close();
+      } else {
+        alert("Client not found!");
+      }
+    }
+
+    // Placeholder for document generation logic
+    document.getElementById('quotationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Quotation generated successfully!');
+      bootstrap.Modal.getInstance(document.getElementById('quotationModal')).hide();
+    });
+  </script>
+</body>
+</html>
