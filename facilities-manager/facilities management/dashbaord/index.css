@@ -2,6 +2,7 @@ body {
   font-family: 'Arial', sans-serif;
   background-color: #f8f9fa;
   transition: background-color 0.3s, color 0.3s;
+  overflow-x: hidden;
 }
 
 body.dark-mode {
@@ -12,10 +13,16 @@ body.dark-mode {
 .navbar {
   background: linear-gradient(135deg, #6a11cb, #2575fc);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  justify-content: space-between;
 }
 
 .navbar-brand, .nav-link {
   color: white !important;
+  font-size: 1.1rem;
+  align-items: center;
+  padding-top: 15px;
+  margin-right: 40px;
 }
 
 .card {

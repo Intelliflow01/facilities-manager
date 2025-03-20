@@ -17,7 +17,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-            <img src="Inteliflow.png" alt="inteli flow logo" width="70" height="45">
+            <img src="../Assests/inteliflow.png" alt="inteli flow logo" width="70" height="55">
             <a class="navbar-brand" style="font-family: 'Arial', sans-serif;" href="#"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -30,10 +30,12 @@
                             Employee Management
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="employeeDropdown">
-                            <li><a class="dropdown-item" href="employee shift.html">Employee Shift</a></li>
-                            <li><a class="dropdown-item" href="employee profile.html">Employee Profile</a></li>
-                            <li><a class="dropdown-item" href="assisgn employee.html">Assign Employees</a></li>
-                            <li><a class="dropdown-item" href="employee warnings.html">Employee Warnings</a></li>
+                            <li><a class="dropdown-item" href="../Employee/employee profile.html">Employee Prifile</a></li>
+                            <li><a class="dropdown-item" href="../Employee/employee shift.html">Employee shift</a></li>
+                            <li><a class="dropdown-item" href="../Employee/employee.html">Assign Employees</a></li>
+                            <li><a class="dropdown-item" href="../Employee/warnings.html">Employee Warnings</a></li>
+                            <li><a class="dropdown-item" href="../Employee/report.html">Performance</a></li>
+                            <li><a class="dropdown-item" href="../Employee/against employee.html">Employee Complaints</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -41,17 +43,45 @@
                             Attendance
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="attendanceDropdown">
-                            <li><a class="dropdown-item" href="attendance dashbaord.html">Attendance Dashboard</a></li>
-                            <li><a class="dropdown-item" href="mark attendance.html">Attendance Marking</a></li>
-                            <li><a class="dropdown-item" href="attendance correction request.html">Attendance Correction Request</a></li>
-                            <li><a class="dropdown-item" href="attendance report.html">Attendance Reports</a></li>
+                            <li><a class="dropdown-item" href="../Attendance/attendance dashbaord.html">Attendance Dashboard</a></li>
+                            <li><a class="dropdown-item" href="../Attendance/mark attendance.html">Attendance Marking</a></li>
+                            <li><a class="dropdown-item" href="../Attendance/correction request.html">Attendance Correction Request</a></li>
+                            <li><a class="dropdown-item" href="../Attendance/Leave and Absent.html">leave & Absent</a></li>
+                            <li><a class="dropdown-item" href="../Attendance/attendance report.html">Attendance Reports</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#">Payroll</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Reports</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Settings</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Support</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Logout</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="PayrollDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Payroll
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="PayrollDropdown">
+                            <li><a class="dropdown-item" href="../Payroll/payrolldashbaord.html">Payroll Dashbaord</a></li>
+                            <li><a class="dropdown-item" href="../Payroll/payroll report.html">Payroll report</a></li>
+                            <li><a class="dropdown-item" href="../Payroll/Payroll Settings.html">payroll Setting</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="ClientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Client
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="ClientDropdown">
+                            <li><a class="dropdown-item" href="../Client/client profile.html">Client profile</a></li>
+                            <li><a class="dropdown-item" href="../Client/clients documents.html">Client Documents</a></li>
+                            <li><a class="dropdown-item" href="../Client/client assigned employees.html">Client Assigned Employees</a></li>
+                            <li><a class="dropdown-item" href="../Client/client payment tracking.html">Client Payment</a></li>
+                            <li><a class="dropdown-item" href="../Client/Complaints Against Employees.html">Employee Complain</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="SettingsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Setting
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="SettingsDropdown">
+                            <li><a class="dropdown-item" href="../settings/master.html">Master Settings</a></li>
+                            <li><a class="dropdown-item" href="../settings/Support.html">Support</a></li>
+                            <li><a class="dropdown-item" href="payroll setting.html">Logout</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -59,7 +89,6 @@
 
     <!-- Main Content -->
     <div class="container-fluid mt-4">
-        <h2 class="mb-4">Dashboard</h2>
 
         <!-- Stats & Widgets -->
         <div class="row mb-4">
@@ -140,7 +169,6 @@
         <!-- Quick Actions -->
         <div class="row mb-4 quick-actions">
             <div class="col-12">
-                <h4>Quick Actions</h4>
                 <button class="btn btn-primary"><i class="fas fa-file-invoice"></i> Generate Payroll</button>
                 <button class="btn btn-success"><i class="fas fa-check-circle"></i> Approve Attendance</button>
                 <button class="btn btn-info"><i class="fas fa-bell"></i> Send Reminders</button>
